@@ -38,7 +38,4 @@ public class diaBaseRecherche extends JDialog {
 	public JButton getbAnnuler() {
 		return bAnnuler;
 	}
-	
-	
-
 }

@@ -2,7 +2,6 @@ package guiRecherche;
 
 import guiListRIR.CtrlListRir;
 
-import java.awt.event.ActionEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -10,27 +9,30 @@ import javax.swing.DefaultListModel;
 
 import model.SqlLiteInterface;
 
-public class CtrlRechercheDrogue extends CtrlBaseRecherche
+public class CtrlRechercheQuartier extends CtrlBaseRecherche 
 {
+
 	
-	public CtrlRechercheDrogue() 
+	
+	public CtrlRechercheQuartier()
 	{
 		super();
-
-		dia = new diaRechercheWithList(null,"Recherche sur base des types de drogue",true);
+		
+		dia = new diaRechercheWithList(null,"Recherche sur base d'un quartier",true);
+		
 		this.init();
 		
-		// récupération de la liste des drogues
+		// selection de tous les quartiers
 		try
 		{
-			ResultSet result = SqlLiteInterface.SelectAllDrogue();
+			ResultSet result = SqlLiteInterface.SelectAllQuartier();
 			
 			// création du model pour la liste
 			DefaultListModel model = new DefaultListModel();
 			
 			while(result.next())
 			{
-				model.addElement(result.getString("drogue"));
+				model.addElement(result.getString("quartier"));
 			}
 			((diaRechercheWithList)dia).getList().setModel(model);
 			
@@ -43,26 +45,14 @@ public class CtrlRechercheDrogue extends CtrlBaseRecherche
 		dia.setVisible(true);
 	}
 
-
-
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-		super.actionPerformed(arg0);
-		
-		
-	}
-
-
-
 	@Override
 	protected void doRechercher() 
 	{
 		String rech = (String)((diaRechercheWithList)dia).getList().getSelectedValue();
 		dia.setVisible(false);
 		CtrlListRir cl = new CtrlListRir();
-		cl.RechercheFromDrogue(rech);
-		
+		cl.RechercheFromQuartier(rech);
+
 	}
-	
+
 }

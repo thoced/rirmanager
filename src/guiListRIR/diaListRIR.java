@@ -25,9 +25,6 @@ import java.awt.SystemColor;
 public class diaListRIR extends JDialog 
 {
 	private JTable tableListRir;
-	private JFormattedTextField tDateHaute;
-	private JFormattedTextField tDateBasse;
-	private JPanel panelRecherche;
 	private JTextField tNumero;
 	private JTextField tDate;
 	private JTextField tEmission;
@@ -50,8 +47,6 @@ public class diaListRIR extends JDialog
 	private JScrollPane scrollPane_7;
 	private JTextArea tNatureInfo;
 	private JButton bViewData;
-	private JTextArea tSearch;
-	private JButton bSearch;
 	public diaListRIR(Frame frame,String title,boolean modal)
 	{
 		super(frame,title,modal);
@@ -62,24 +57,12 @@ public class diaListRIR extends JDialog
 		tableListRir.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		tableListRir.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		JScrollPane scrollPane = new JScrollPane(tableListRir);
-		scrollPane.setBounds(35, 271, 400, 480);
+		scrollPane.setBounds(35, 11, 400, 740);
 		getContentPane().add(scrollPane);
-		
-		panelRecherche = new JPanel();
-		panelRecherche.setBorder(new TitledBorder(null, "Dates de Recherche", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelRecherche.setBounds(31, 11, 404, 85);
-		getContentPane().add(panelRecherche);
-		panelRecherche.setLayout(null);
 		
 		MaskFormatter dateBasseFormatter;
 		try {
 			dateBasseFormatter = new MaskFormatter(" ## / ## / #### ");
-			JLabel lblDateBasse = new JLabel("Date basse:");
-			lblDateBasse.setBounds(21, 16, 90, 20);
-			panelRecherche.add(lblDateBasse);
-			tDateBasse = new JFormattedTextField(dateBasseFormatter);
-			tDateBasse.setBounds(121, 16, 128, 20);
-			panelRecherche.add(tDateBasse);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -87,12 +70,6 @@ public class diaListRIR extends JDialog
 		
 		try {
 			MaskFormatter dateHauteFormatter = new MaskFormatter(" ## / ## / #### ");
-			JLabel lblDateHaute = new JLabel("Date haute:");
-			lblDateHaute.setBounds(21, 54, 90, 20);
-			panelRecherche.add(lblDateHaute);
-			tDateHaute = new JFormattedTextField(dateHauteFormatter);
-			tDateHaute.setBounds(121, 54, 128, 20);
-			panelRecherche.add(tDateHaute);
 			
 			JPanel panelInfo = new JPanel();
 			panelInfo.setBorder(new TitledBorder(null, "Information", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -204,21 +181,6 @@ public class diaListRIR extends JDialog
 			bViewData.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			bViewData.setBounds(10, 615, 89, 60);
 			panelInfo.add(bViewData);
-			
-			JPanel panelSearch = new JPanel();
-			panelSearch.setBorder(new TitledBorder(null, "Recherche", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			panelSearch.setBounds(31, 96, 404, 117);
-			getContentPane().add(panelSearch);
-			panelSearch.setLayout(null);
-			
-			tSearch = new JTextArea();
-			JScrollPane scrollPane_8 = new JScrollPane(tSearch);
-			scrollPane_8.setBounds(10, 23, 380, 51);
-			panelSearch.add(scrollPane_8);
-			
-			bSearch = new JButton("Rechercher");
-			bSearch.setBounds(301, 83, 89, 23);
-			panelSearch.add(bSearch);
 					
 		
 			
@@ -236,14 +198,7 @@ public class diaListRIR extends JDialog
 	}
 	
 	
-	public JTextArea gettSearch() {
-		return tSearch;
-	}
 
-
-	public JButton getbSearch() {
-		return bSearch;
-	}
 
 
 	public JButton getbViewData() {
@@ -277,12 +232,7 @@ public class diaListRIR extends JDialog
 	public JTable getTableListRir() {
 		return tableListRir;
 	}
-	public JFormattedTextField gettDateHaute() {
-		return tDateHaute;
-	}
-	public JFormattedTextField gettDateBasse() {
-		return tDateBasse;
-	}
+	
 	public JTextField gettNumero() {
 		return tNumero;
 	}

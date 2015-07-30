@@ -101,6 +101,65 @@ public class ModelTableRir extends DefaultTableModel
 			return null;
 	}
 	
+	public void SelectFromDrogue(String drogue)
+	{
+		listRir.clear();
+		
+		ResultSet result;
+		try {
+			result = SqlLiteInterface.SelectRirFromDrogue(drogue);
+			update(result);
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void SelectFromQuartier(String quartier)
+	{
+		listRir.clear();
+		
+		ResultSet result;
+		try {
+			result = SqlLiteInterface.SelectRirFromQuartier(quartier);
+			update(result);
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void SelectFromPersonne(String nom,String prenom,String surnom)
+	{
+		listRir.clear();
+		
+		ResultSet result;
+		try {
+			result = SqlLiteInterface.SelectRirFromPersonne(nom, prenom, surnom);
+			update(result);
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void SelectFromMtp(String marque,String immatriculation,String couleur)
+	{
+		listRir.clear();
+		
+		ResultSet result;
+		try {
+			result = SqlLiteInterface.SelectRirFromMtp(marque, immatriculation, couleur);
+			update(result);
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
 	
 	@Override

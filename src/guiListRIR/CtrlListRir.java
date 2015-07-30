@@ -29,7 +29,7 @@ import model.Quartier;
 import model.Rir;
 import model.SqlLiteInterface;
 
-public class CtrlListRir implements ActionListener,MouseListener,FocusListener
+public class CtrlListRir implements ActionListener,MouseListener
 {
 	private diaListRIR dia;
 	
@@ -44,20 +44,49 @@ public class CtrlListRir implements ActionListener,MouseListener,FocusListener
 		dia.getTableListRir().setModel(modelRir);
 		dia.getTableListRir().addMouseListener(this);
 		
-		// heure basse et haute
-		dia.gettDateBasse().addFocusListener(this);
-		dia.gettDateHaute().addFocusListener(this);
 		// bviewpdf
 		dia.getbViewData().addActionListener(this);
 		dia.getbViewData().setActionCommand("VIEWPDF");
-		// bSearch
-		dia.getbSearch().addActionListener(this);
-		dia.getbSearch().setActionCommand("RECHERCHE");
+		
 		
 		// affichage de la vue
-		dia.setVisible(true);
+		//dia.setVisible(true);
 	}
 
+	public void RechercheFromDrogue(String drogue)
+	{
+		modelRir.SelectFromDrogue(drogue);
+		dia.getTableListRir().updateUI();
+		dia.setVisible(true);
+	}
+	
+	public void RechercheFromQuartier(String quartier)
+	{
+		modelRir.SelectFromQuartier(quartier);
+		dia.getTableListRir().updateUI();
+		dia.setVisible(true);
+	}
+	
+	public void RechercheFromPersonne(String nom,String prenom,String surnom)
+	{
+		modelRir.SelectFromPersonne(nom, prenom, surnom);
+		dia.getTableListRir().updateUI();
+		dia.setVisible(true);
+	}
+	
+	public void RechercheFromMtp(String marque,String immatriculation,String couleur)
+	{
+		modelRir.SelectFromMtp(marque, immatriculation, couleur);
+		dia.getTableListRir().updateUI();
+		dia.setVisible(true);
+	}
+	
+	
+	public void RechercheAll()
+	{
+		dia.getTableListRir().updateUI();
+		dia.setVisible(true);
+	}
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) 
@@ -204,38 +233,20 @@ public class CtrlListRir implements ActionListener,MouseListener,FocusListener
 				e.printStackTrace();
 			}break;
 			
-			case "RECHERCHE": 
-								if(dia.gettSearch().getText() != null && dia.gettSearch().getText().length() > 0)
-								{
-									// on vide les dates
-									dia.gettDateBasse().setText("");
-									dia.gettDateHaute().setText("");
-									// création du joker
-									String info = dia.gettSearch().getText();
-									info = "%" + info + "%";
-									modelRir.SelectFromInfo(info);
-									// update
-									dia.getTableListRir().updateUI();
-								}
 			
-							break;
 		}
 	}
 
 
-	@Override
-	public void focusGained(FocusEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
 
-	@Override
+	/*@Override
 	public void focusLost(FocusEvent arg0) 
 	{
 		// quand le focus est perdu sur la date haute ou basse, on refait une recherche
-		String dateBasse = dia.gettDateBasse().getText().trim();
-		String dateHaute = dia.gettDateHaute().getText().trim();
+		//String dateBasse = dia.gettDateBasse().getText().trim();
+		//String dateHaute = dia.gettDateHaute().getText().trim();
 		
 		if(dateBasse != null && dateHaute != null)
 		{
@@ -270,5 +281,5 @@ public class CtrlListRir implements ActionListener,MouseListener,FocusListener
 			}
 		}
 		
-	}
+	}*/
 }

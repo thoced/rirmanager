@@ -49,7 +49,7 @@ public class Mtp
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return marque + " " + immatriculation; 
+		return marque + " " + immatriculation + " " + couleur; 
 	}
 	
 	

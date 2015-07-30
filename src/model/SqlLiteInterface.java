@@ -675,7 +675,76 @@ public class SqlLiteInterface
 		
 		
 	}
-
+	public static ResultSet SelectRirFromDrogue(String drogue) throws ClassNotFoundException, SQLException
+	{
+		String sql = "select t_rir.id,daterir,numero,nature,source from t_rir INNER JOIN t_link_drogue ON t_rir.id = t_link_drogue.ref_rir where ref_drogue = ?";
+		
+		PreparedStatement ps = getConnection().prepareStatement(sql);
+		ps.setString(1, drogue);
+		
+		
+		return ps.executeQuery();
+		
+		
+		
+	}
 	
+	public static ResultSet SelectRirFromQuartier(String quartier) throws ClassNotFoundException, SQLException
+	{
+		String sql = "select t_rir.id,daterir,numero,nature,source from t_rir INNER JOIN t_link_quartier ON t_rir.id = t_link_quartier.ref_rir where ref_quartier = ?";
+		
+		PreparedStatement ps = getConnection().prepareStatement(sql);
+		ps.setString(1, quartier);
+		
+		
+		return ps.executeQuery();
+		
+		
+		
+	}
+	
+	public static ResultSet SelectRirFromPersonne(String nom,String prenom,String surnom) throws ClassNotFoundException, SQLException
+	{
+		String sql = "select t_rir.id,daterir,numero,nature,source from t_rir INNER JOIN t_personne ON t_rir.id = t_personne.ref_rir where nom = ? OR prenom = ? OR surnom = ? AND nom <> '' AND prenom <> '' AND surnom <> ''";
+		
+		PreparedStatement ps = getConnection().prepareStatement(sql);
+		ps.setString(1, nom);
+		ps.setString(2, prenom);
+		ps.setString(3, surnom);
+		
+		
+		return ps.executeQuery();
+		
+		
+		
+	}
+	
+	public static ResultSet SelectRirFromMtp(String marque,String immatriculation,String couleur) throws ClassNotFoundException, SQLException
+	{
+		marque = "%" + marque + "%";
+		
+		String sql;
+		if(immatriculation.length() > 0)
+		{
+			 sql = "select t_rir.id,daterir,numero,nature,source from t_rir INNER JOIN t_mtp ON t_rir.id = t_mtp.ref_rir where marque like ? OR immatriculation = ? OR couleur = ? AND marque <> '' AND immatriculation <> '' AND couleur <> ''";
+			 	PreparedStatement ps = getConnection().prepareStatement(sql);
+				ps.setString(1, marque);
+				ps.setString(2, immatriculation);
+				ps.setString(3, couleur);
+				return ps.executeQuery();
+		}
+		else
+		{
+			sql = "select t_rir.id,daterir,numero,nature,source from t_rir INNER JOIN t_mtp ON t_rir.id = t_mtp.ref_rir where marque like ? OR couleur = ?";
+				PreparedStatement ps = getConnection().prepareStatement(sql);
+				ps.setString(1, marque);
+				ps.setString(2, couleur);
+				return ps.executeQuery();
+		}
+		
+		
+		
+		
+	}
 	
 }

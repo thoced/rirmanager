@@ -25,6 +25,9 @@ import javax.swing.JButton;
 import gui.ToolBarRir;
 import guiListRIR.CtrlListRir;
 import guiRecherche.CtrlRechercheDrogue;
+import guiRecherche.CtrlRechercheMtp;
+import guiRecherche.CtrlRecherchePersonne;
+import guiRecherche.CtrlRechercheQuartier;
 
 import javax.swing.JTabbedPane;
 import javax.swing.JMenuBar;
@@ -64,6 +67,9 @@ public class mainProgram implements ICallBackMVC, ActionListener{
 	private JMenuItem mListRir;
 	private JMenu menuRecherche;
 	private JMenuItem mRechercheDrogue;
+	private JMenuItem mRechercheQuartier;
+	private JMenuItem mRecherchePersonne;
+	private JMenuItem mRechercheMtp;
 
 	/**
 	 * Launch the application.
@@ -137,6 +143,21 @@ public class mainProgram implements ICallBackMVC, ActionListener{
 		mRechercheDrogue.setActionCommand("RECHERCHE_DROGUE");
 		menuRecherche.add(mRechercheDrogue);
 		
+		mRechercheQuartier = new JMenuItem("Recherche (Quartier)");
+		mRechercheQuartier.addActionListener(this);
+		mRechercheQuartier.setActionCommand("RECHERCHE_QUARTIER");
+		menuRecherche.add(mRechercheQuartier);
+		
+		mRecherchePersonne = new JMenuItem("Recherche d'une personne");
+		mRecherchePersonne.addActionListener(this);
+		mRecherchePersonne.setActionCommand("RECHERCHE_PERSONNE");
+		menuRecherche.add(mRecherchePersonne);
+		
+		mRechercheMtp = new JMenuItem("Recherche d'un Moyen de Transport");
+		mRechercheMtp.addActionListener(this);
+		mRechercheMtp.setActionCommand("RECHERCHE_MTP");
+		menuRecherche.add(mRechercheMtp);
+		
 		
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 		
@@ -186,10 +207,22 @@ public class mainProgram implements ICallBackMVC, ActionListener{
 								break;
 			
 			case "LISTRIR":		CtrlListRir ctrlListRir = new CtrlListRir();
+								ctrlListRir.RechercheAll();
 								break;
 						
 			case "RECHERCHE_DROGUE": CtrlRechercheDrogue ctrlRechercheDrogue = new CtrlRechercheDrogue();
-								break;
+									break;
+								
+			case "RECHERCHE_QUARTIER": CtrlRechercheQuartier ctrlRechercheQuartier = new CtrlRechercheQuartier();
+									break;
+									
+			case "RECHERCHE_PERSONNE": CtrlRecherchePersonne ctrlRecherchePersonne = new CtrlRecherchePersonne();
+									break;
+									
+			case "RECHERCHE_MTP": CtrlRechercheMtp ctrlRechercheMtp = new CtrlRechercheMtp();
+									break;
+		
+			
 								
 		}
 		
