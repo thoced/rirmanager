@@ -24,7 +24,9 @@ import javax.swing.JButton;
 
 import gui.ToolBarRir;
 import guiListRIR.CtrlListRir;
+import guiRecherche.CtrlRechercheContact;
 import guiRecherche.CtrlRechercheDrogue;
+import guiRecherche.CtrlRechercheInfo;
 import guiRecherche.CtrlRechercheMtp;
 import guiRecherche.CtrlRecherchePersonne;
 import guiRecherche.CtrlRechercheQuartier;
@@ -59,6 +61,8 @@ import javax.swing.SwingConstants;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.border.TitledBorder;
+
 public class mainProgram implements ICallBackMVC, ActionListener{
 
 	private JFrame frame;
@@ -70,6 +74,9 @@ public class mainProgram implements ICallBackMVC, ActionListener{
 	private JMenuItem mRechercheQuartier;
 	private JMenuItem mRecherchePersonne;
 	private JMenuItem mRechercheMtp;
+	private JMenuItem mQuitter;
+	private JMenuItem mRechercheContact;
+	private JMenuItem mRechercheInfo;
 
 	/**
 	 * Launch the application.
@@ -122,6 +129,11 @@ public class mainProgram implements ICallBackMVC, ActionListener{
 		JMenu menuFichier = new JMenu("Fichier");
 		menuBar.add(menuFichier);
 		
+		mQuitter = new JMenuItem("Quitter");
+		mQuitter.addActionListener(this);
+		mQuitter.setActionCommand("QUITTER");
+		menuFichier.add(mQuitter);
+		
 		JMenu menuEdition = new JMenu("Edition");
 		menuBar.add(menuEdition);
 		
@@ -148,7 +160,7 @@ public class mainProgram implements ICallBackMVC, ActionListener{
 		mRechercheQuartier.setActionCommand("RECHERCHE_QUARTIER");
 		menuRecherche.add(mRechercheQuartier);
 		
-		mRecherchePersonne = new JMenuItem("Recherche d'une personne");
+		mRecherchePersonne = new JMenuItem("Recherche d'une Personne");
 		mRecherchePersonne.addActionListener(this);
 		mRecherchePersonne.setActionCommand("RECHERCHE_PERSONNE");
 		menuRecherche.add(mRecherchePersonne);
@@ -158,13 +170,23 @@ public class mainProgram implements ICallBackMVC, ActionListener{
 		mRechercheMtp.setActionCommand("RECHERCHE_MTP");
 		menuRecherche.add(mRechercheMtp);
 		
+		mRechercheContact = new JMenuItem("Recherche d'un num\u00E9ro de Contact");
+		mRechercheContact.addActionListener(this);
+		mRechercheContact.setActionCommand("RECHERCHE_CONTACT");
+		menuRecherche.add(mRechercheContact);
+		
+		mRechercheInfo = new JMenuItem("Recherche dans le contenu de l'information (RIR)");
+		mRechercheInfo.addActionListener(this);
+		mRechercheInfo.setActionCommand("RECHERCHE_INFO");
+		menuRecherche.add(mRechercheInfo);
+		
 		
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon(mainProgram.class.getResource("/Textures/logo.png")));
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		frame.getContentPane().add(lblNewLabel);
+		JLabel logoLabel = new JLabel("");
+		logoLabel.setIcon(new ImageIcon(mainProgram.class.getResource("/Textures/logo.png")));
+		logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		frame.getContentPane().add(logoLabel);
 		
 		// instance du sqlinterface
 		sqlLite = new SqlLiteInterface();
@@ -221,6 +243,14 @@ public class mainProgram implements ICallBackMVC, ActionListener{
 									
 			case "RECHERCHE_MTP": CtrlRechercheMtp ctrlRechercheMtp = new CtrlRechercheMtp();
 									break;
+									
+			case "RECHERCHE_CONTACT": CtrlRechercheContact ctrlRechercheContact = new CtrlRechercheContact();
+									break;
+									
+			case "RECHERCHE_INFO": CtrlRechercheInfo ctrlRechercheInfo = new CtrlRechercheInfo();
+									break;
+									
+			case "QUITTER": frame.setVisible(false);frame.dispose();System.exit(0);break;
 		
 			
 								

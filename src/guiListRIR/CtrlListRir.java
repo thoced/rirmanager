@@ -81,6 +81,20 @@ public class CtrlListRir implements ActionListener,MouseListener
 		dia.setVisible(true);
 	}
 	
+	public void RechercheFromContact(String contact)
+	{
+		modelRir.SelectFromContact(contact);
+		dia.getTableListRir().updateUI();
+		dia.setVisible(true);
+	}
+	
+	public void RechercheFromInfo(String info)
+	{
+		modelRir.SelectFromInfo(info);
+		dia.getTableListRir().updateUI();
+		dia.setVisible(true);
+	}
+	
 	
 	public void RechercheAll()
 	{

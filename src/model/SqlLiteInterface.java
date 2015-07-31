@@ -664,6 +664,8 @@ public class SqlLiteInterface
 	
 	public static ResultSet SelectRirFromInfo(String info) throws ClassNotFoundException, SQLException
 	{
+		info = "%" + info + "%";
+		
 		String sql = "select id,daterir,numero,nature,source from t_rir where nature like ? ";
 		
 		PreparedStatement ps = getConnection().prepareStatement(sql);
@@ -743,8 +745,17 @@ public class SqlLiteInterface
 		}
 		
 		
+	}
+	
+	public static ResultSet SelectRirFromContact(String contact) throws ClassNotFoundException, SQLException
+	{
+		contact = "%" + contact + "%";
 		
+		String sql = "select t_rir.id,daterir,numero,nature,source from t_rir INNER JOIN t_contact ON t_rir.id = t_contact.ref_rir where contact like ?";
 		
+		PreparedStatement ps = getConnection().prepareStatement(sql);
+		ps.setString(1, contact);
+		return ps.executeQuery();
 	}
 	
 }

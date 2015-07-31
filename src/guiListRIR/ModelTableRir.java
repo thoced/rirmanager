@@ -161,6 +161,20 @@ public class ModelTableRir extends DefaultTableModel
 		
 	}
 	
+	public void SelectFromContact(String contact)
+	{
+		listRir.clear();
+		
+		ResultSet result;
+		try {
+			result = SqlLiteInterface.SelectRirFromContact(contact);
+			update(result);
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	
 	@Override
 	public void addColumn(Object arg0, Object[] arg1) {
