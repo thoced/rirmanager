@@ -758,4 +758,21 @@ public class SqlLiteInterface
 		return ps.executeQuery();
 	}
 	
+	public static ResultSet SelectManyContact() throws ClassNotFoundException, SQLException
+	{
+		String sql = "select contact,nb from (select contact,count(contact) nb from t_contact group by contact ) td where td.nb > 1";
+		
+		Statement st =  getConnection().createStatement();
+		return st.executeQuery(sql);
+		
+	}
+	
+	public static ResultSet SelectManyPersonne() throws ClassNotFoundException, SQLException
+	{
+		String sql = "select nom,prenom,surnom,datenaissance,nb from (select nom,prenom,surnom,datenaissance,count(nom) nb from t_personne group by nom ) td where td.nb > 1";
+		
+		Statement st =  getConnection().createStatement();
+		return st.executeQuery(sql);
+		
+	}
 }

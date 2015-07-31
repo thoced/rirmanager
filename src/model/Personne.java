@@ -10,6 +10,7 @@ public class Personne
 	private String prenom;
 	private String  dateNaissance;
 	private String surnom;
+	private int nb;
 	
 	public Personne()
 	{
@@ -35,6 +36,16 @@ public class Personne
 		}
 	}
 	
+	
+	
+	public int getNb() {
+		return nb;
+	}
+
+	public void setNb(int nb) {
+		this.nb = nb;
+	}
+
 	public String getSurnom() {
 		return surnom;
 	}

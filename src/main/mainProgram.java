@@ -23,6 +23,7 @@ import javax.swing.JToolBar;
 import javax.swing.JButton;
 
 import gui.ToolBarRir;
+import guiAbout.diaAbout;
 import guiListRIR.CtrlListRir;
 import guiRecherche.CtrlRechercheContact;
 import guiRecherche.CtrlRechercheDrogue;
@@ -63,6 +64,9 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.border.TitledBorder;
 
+import guiSearchEffect.CtrlSearchEffect;
+import guiSearchEffect.panelSearchEffect;
+
 public class mainProgram implements ICallBackMVC, ActionListener{
 
 	private JFrame frame;
@@ -77,7 +81,13 @@ public class mainProgram implements ICallBackMVC, ActionListener{
 	private JMenuItem mQuitter;
 	private JMenuItem mRechercheContact;
 	private JMenuItem mRechercheInfo;
-
+	private panelLogo panelLogo;
+	private panelSearchEffect panelSearchEffect;
+	private CtrlSearchEffect ctrlSearch;
+	private JMenu menuConfig;
+	private JMenuItem mntmNewMenuItem;
+	private JMenu menuAide;
+	private JMenuItem mAbout;
 	/**
 	 * Launch the application.
 	 */
@@ -180,13 +190,28 @@ public class mainProgram implements ICallBackMVC, ActionListener{
 		mRechercheInfo.setActionCommand("RECHERCHE_INFO");
 		menuRecherche.add(mRechercheInfo);
 		
+		menuConfig = new JMenu("Configuration");
+		menuBar.add(menuConfig);
 		
-		frame.getContentPane().setLayout(new BorderLayout(0, 0));
+		mntmNewMenuItem = new JMenuItem("Connexion SGBD");
+		menuConfig.add(mntmNewMenuItem);
 		
-		JLabel logoLabel = new JLabel("");
-		logoLabel.setIcon(new ImageIcon(mainProgram.class.getResource("/Textures/logo.png")));
-		logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		frame.getContentPane().add(logoLabel);
+		menuAide = new JMenu("Aide");
+		menuBar.add(menuAide);
+		
+		mAbout = new JMenuItem("Au sujet de RirManager");
+		mAbout.setActionCommand("ABOUT");
+		mAbout.addActionListener(this);
+		menuAide.add(mAbout);
+		frame.getContentPane().setLayout(new BorderLayout(0, 64));
+		
+		panelLogo = new panelLogo();
+		frame.getContentPane().add(panelLogo, BorderLayout.CENTER);
+		
+		panelSearchEffect = new panelSearchEffect();
+		frame.getContentPane().add(panelSearchEffect, BorderLayout.SOUTH);
+		
+		ctrlSearch = new CtrlSearchEffect(panelSearchEffect);
 		
 		// instance du sqlinterface
 		sqlLite = new SqlLiteInterface();
@@ -226,6 +251,8 @@ public class mainProgram implements ICallBackMVC, ActionListener{
 		{
 			case "ADDRIR" : 	diaNewRir dia = new diaNewRir(null,"Ajout de RIR",true);
 								dia.setVisible(true);
+								// appel au search automatique
+								ctrlSearch.UpdateSearch();
 								break;
 			
 			case "LISTRIR":		CtrlListRir ctrlListRir = new CtrlListRir();
@@ -248,6 +275,10 @@ public class mainProgram implements ICallBackMVC, ActionListener{
 									break;
 									
 			case "RECHERCHE_INFO": CtrlRechercheInfo ctrlRechercheInfo = new CtrlRechercheInfo();
+									break;
+									
+			case "ABOUT":		    diaAbout about  = new diaAbout(null,"Au sujet de RirManager",true);
+									about.setVisible(true);
 									break;
 									
 			case "QUITTER": frame.setVisible(false);frame.dispose();System.exit(0);break;
