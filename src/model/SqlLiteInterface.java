@@ -19,6 +19,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Calendar;
+import java.util.Properties;
 
 import javax.swing.JOptionPane;
 
@@ -29,13 +30,34 @@ public class SqlLiteInterface
 	
 	private static Connection doConnection() throws ClassNotFoundException, SQLException
 	{
+		// chargement du fichier properties
+		Properties prop = new Properties();
+		String driverConnection = null;
+		String profil = null,password = null;
 		
-	
+		File fileconfig = new File(SqlLiteInterface.class.getResource("/Properties/config.properties").getFile());
+		try 
+		{
+			FileInputStream fisProperties = new FileInputStream(fileconfig.getPath());
+			// chargement
+			prop.load(fisProperties);
+			// driverconnection
+			driverConnection = "jdbc:mysql://" + prop.getProperty("adress_db") + "/" + prop.getProperty("name_db");
+			profil = prop.getProperty("profil");
+			password = prop.getProperty("password");
+			
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			
 		
 		Class.forName("com.mysql.jdbc.Driver");
-		
-		
-		connection = DriverManager.getConnection("jdbc:mysql://localhost/db_rir","test","bombe123");
+		connection = DriverManager.getConnection(driverConnection,profil,password);
 		//driver = DriverManager.getDriver("jdbc:sqlite:test.db");
 		
 		/*Class.forName("org.sqlite.JDBC");
