@@ -16,7 +16,7 @@ public class Drogue
 	{
 		try
 		{
-			type = result.getString("ref_drogue");
+			type = result.getString("drogue");
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

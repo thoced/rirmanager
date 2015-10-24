@@ -15,7 +15,7 @@ public class Quartier
 	{
 		try 
 		{
-			nom = result.getString("ref_quartier");
+			nom = result.getString("quartier");
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

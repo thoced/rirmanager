@@ -280,8 +280,8 @@ public class ModelMVC
 			
 			while(result.next())
 			{
-				Couleur couleur  = new Couleur();
-				couleur.setCouleur(result.getString("couleur"));
+				Couleur couleur  = new Couleur(result);
+				//uleur.setCouleur(result.getString("couleur"));
 				list.add(couleur);
 			}
 			
@@ -309,8 +309,7 @@ public class ModelMVC
 			
 			while(result.next())
 			{
-				Source source  = new Source();
-				source.setSource(result.getString("source"));
+				Source source  = new Source(result);
 				list.add(source);
 			}
 			

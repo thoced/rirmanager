@@ -15,7 +15,7 @@ public class Methode
 	{
 		try 
 		{
-			methode = result.getString("ref_methode");
+			methode = result.getString("methode");
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

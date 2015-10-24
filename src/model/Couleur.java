@@ -1,8 +1,16 @@
 package model;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class Couleur
 {
 	private String couleur;
+	
+	public Couleur(ResultSet result) throws SQLException
+	{
+		couleur = result.getString("couleur");
+	}
 
 	public String getCouleur() {
 		return couleur;

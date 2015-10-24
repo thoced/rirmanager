@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
 import gui.diaAdd;
+import gui.diaAddRirView;
 import gui.diaNewRir;
 import gui.panelAdd;
 import gui.panelList;
@@ -249,7 +250,9 @@ public class mainProgram implements ICallBackMVC, ActionListener{
 	{
 		switch(e.getActionCommand())
 		{
-			case "ADDRIR" : 	diaNewRir dia = new diaNewRir(null,"Ajout de RIR",true);
+			case "ADDRIR" : 	//diaNewRir dia = new diaNewRir(null,"Ajout de RIR",true);
+								diaAddRirView dia = new diaAddRirView(null,"Ajout de RIR",true);
+			
 								dia.setVisible(true);
 								// appel au search automatique
 								ctrlSearch.UpdateSearch();
