@@ -6,22 +6,23 @@ import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 import model.Personne;
+import model.PersonneSearch;
 
 public class modelPersonne extends DefaultTableModel 
 {
-	private String[] columnName = {"Nom","Prenom","Surnom","Date de naissance"};
+	private String[] columnName = {"Nom","Prenom","Surnom","Date de naissance","Nombre"};
 	
-	private List<Personne> listPersonne;
+	private List<PersonneSearch> listPersonne;
 	
 	
 	public modelPersonne() {
 		super();
-		listPersonne = new ArrayList<Personne>();
+		listPersonne = new ArrayList<PersonneSearch>();
 	}
 
 	
 	
-	public List<Personne> getListPersonne() {
+	public List<PersonneSearch> getListPersonne() {
 		return listPersonne;
 	}
 
@@ -55,11 +56,13 @@ public class modelPersonne extends DefaultTableModel
 		{
 		case 0 : return listPersonne.get(row).getNom();
 		
-		case 1: return listPersonne.get(row).getPrenom();
+		case 1: return listPersonne.get(row).getPrenon();
 		
 		case 2: return listPersonne.get(row).getSurnom();
 		
-		case 3: return listPersonne.get(row).getDateNaissance();
+		case 3: return listPersonne.get(row).getDatenaisance();
+		
+		case 4: return listPersonne.get(row).getNb();
 		
 		default : return "";
 		}

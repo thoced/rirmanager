@@ -11,15 +11,17 @@ public class Quartier
 	{
 		
 	}
-	public Quartier(ResultSet result)
+	public Quartier(ResultSet result) throws SQLException
 	{
 		try 
 		{
-			nom = result.getString("quartier");
+			nom = result.getString("ref_quartier");
 			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) 
+		{
+		
+		nom = result.getString("quartier");
+			
 		}
 	}
 

@@ -28,6 +28,8 @@ import model.Personne;
 import model.Quartier;
 import model.Rir;
 import model.SqlLiteInterface;
+import java.awt.Font;
+import javax.swing.UIManager;
 
 public class CtrlListRir implements ActionListener,MouseListener
 {
@@ -40,9 +42,12 @@ public class CtrlListRir implements ActionListener,MouseListener
 	public CtrlListRir()
 	{
 		dia = new diaListRIR(null,"List des RIR",true);
+		dia.getTableListRir().setFont(UIManager.getFont("Table.font"));
 		modelRir = new ModelTableRir();
 		dia.getTableListRir().setModel(modelRir);
 		dia.getTableListRir().addMouseListener(this);
+		
+		
 		
 		// bviewpdf
 		dia.getbViewData().addActionListener(this);

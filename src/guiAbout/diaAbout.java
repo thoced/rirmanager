@@ -7,6 +7,9 @@ import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
+import javax.swing.JScrollPane;
+import javax.swing.JEditorPane;
+import java.awt.Font;
 
 public class diaAbout extends JDialog
 {
@@ -29,9 +32,20 @@ public class diaAbout extends JDialog
 		panel.add(lblNewLabel);
 		lblNewLabel.setIcon(new ImageIcon(diaAbout.class.getResource("/Textures/logomin.png")));
 		
-		JLabel lblNewLabel_1 = new JLabel("D\u00E9velopp\u00E9 par THONON C\u00E9dric");
-		lblNewLabel_1.setBounds(34, 37, 230, 14);
+		JEditorPane editorPane = new JEditorPane();
+		editorPane.setEnabled(false);
+		editorPane.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		editorPane.setText("Rir Drugs Manager analyse les informations contenues dans les Rapports d'informations"); 
+		editorPane.setEditable(false);
+		JScrollPane scrollPane = new JScrollPane(editorPane);
+		scrollPane.setBounds(10, 28, 591, 268);
+		panel.add(scrollPane);
+		
+		JLabel lblNewLabel_1 = new JLabel("Programm\u00E9 par THONON C\u00E9dric");
+		lblNewLabel_1.setBounds(10, 307, 280, 14);
 		panel.add(lblNewLabel_1);
+		
+	
 		
 		this.setLocationRelativeTo(this.getOwner());
 	

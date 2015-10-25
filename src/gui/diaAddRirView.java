@@ -7,9 +7,16 @@ import java.awt.BorderLayout;
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.MaskFormatter;
 
+import model.ContactSearch;
+import model.Drogue;
+import model.Methode;
+import model.Mtp;
+import model.NumeroContact;
 import model.Personne;
 import model.Quartier;
+import model.Rir;
 import model.Source;
 import model.SqlLiteInterface;
 
@@ -22,10 +29,21 @@ import javax.swing.ListModel;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.lang.reflect.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
 
 import javax.swing.JComboBox;
 import java.awt.Color;
@@ -42,6 +60,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 import java.awt.GridLayout;
@@ -53,22 +72,25 @@ import components.comboDrogues;
 import components.comboMethodes;
 import javax.swing.JScrollBar;
 import components.comboCouleur;
+import javax.swing.border.EtchedBorder;
+import javax.swing.JEditorPane;
+import javax.swing.JFileChooser;
+import javax.swing.JFormattedTextField;
+import java.awt.Font;
 
 public class diaAddRirView extends JDialog 
 {
 	private JPanel m_panelRirInfo;
-	private JPanel m_panelData;
+	private JPanel m_panelMetaData;
 	private JTabbedPane m_tabbed;
-	private JTextField m_tNumero;
-	private JTextField textField;
+	private JFormattedTextField m_tNumero;
+	private JFormattedTextField m_tDateRir;
 	
 	// 
 	private diaAddRirModel model;
 	private diaAddRirControl controller;
 	private JList m_listQuartier;
 	private JButton m_bAddQuartier;
-	private JButton m_bAjoutRir;
-	private JButton m_bCancel;
 	private comboQuartiers m_comboQuartiers;
 	private JPanel m_pDrogue;
 	private comboDrogues m_comboDrogues;
@@ -83,7 +105,7 @@ public class diaAddRirView extends JDialog
 	private JTextField m_tNom;
 	private JTextField m_tPrenom;
 	private JTextField m_tSurnom;
-	private JTextField m_tDateNaissance;
+	private JFormattedTextField m_tDateNaissance;
 	private JButton m_bAddPersonne;
 	private JList m_listPersonne;
 	private JPanel m_panelRirInfo02;
@@ -95,8 +117,24 @@ public class diaAddRirView extends JDialog
 	private JTextField m_tImmatriculation;
 	private JButton m_bAddMtp;
 	private JScrollPane scrollPane_4;
+	private JList m_listMtp;
+	private comboCouleur m_cCouleurs;
+	private JTextField m_tContact;
+	private JButton m_bAddContact;
+	private JList m_listContact;
+	private JPanel m_pButton;
+	private JButton m_bWriteRir;
+	private JButton m_bAnnuler;
+	private JPanel m_pMeta;
+	private JScrollPane scrollPane_6;
+	private JEditorPane m_editorMeta;
+	private JPanel m_pPdf;
+	private JButton m_bLoadPdf;
+	private JLabel m_lPdf;
+	private comboSources m_cSource;
+	private File m_pdfFile;
 
-	public diaAddRirView(Frame arg0, String arg1, boolean arg2) {
+	public diaAddRirView(Frame arg0, String arg1, boolean arg2) throws ParseException {
 		super(arg0, arg1, arg2);
 		// TODO Auto-generated constructor stub
 		
@@ -107,7 +145,8 @@ public class diaAddRirView extends JDialog
 		m_tabbed = new JTabbedPane(JTabbedPane.TOP);
 		getContentPane().add(m_tabbed, BorderLayout.CENTER);
 		
-		m_panelData = new JPanel();
+		m_panelMetaData = new JPanel();
+		m_panelMetaData.setBorder(new TitledBorder(null, "Meta Donn\u00E9es et Import Pdf", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
 		JPanel m_pInfo = new JPanel();
 		
@@ -115,10 +154,10 @@ public class diaAddRirView extends JDialog
 		
 		m_panelRirInfo = new JPanel();
 		m_panelRirInfo.setToolTipText("");
-		m_tabbed.addTab("Informations (Parte 01)", null, m_panelRirInfo, null);
+		m_tabbed.addTab("Informations (Partie 01)", null, m_panelRirInfo, null);
 		m_panelRirInfo.setLayout(new BorderLayout(0, 0));
 		m_panelRirInfo02 = new JPanel();
-		m_tabbed.addTab("Informations (Parte 02)", null, m_panelRirInfo02, null);
+		m_tabbed.addTab("Informations (Partie 02)", null, m_panelRirInfo02, null);
 		m_panelRirInfo02.setLayout(null);
 		
 		m_pMtp = new JPanel();
@@ -155,20 +194,78 @@ public class diaAddRirView extends JDialog
 		m_bAddMtp.setBounds(250, 31, 65, 50);
 		m_pMtp.add(m_bAddMtp);
 		
-		scrollPane_4 = new JScrollPane((Component) null);
+		m_listMtp = new JList();
+		DefaultListModel mmtp = new DefaultListModel();
+		m_listMtp.setModel(mmtp);
+		scrollPane_4 = new JScrollPane(m_listMtp);
 		scrollPane_4.setBounds(379, 28, 370, 50);
 		m_pMtp.add(scrollPane_4);
 		
-		comboCouleur comboCouleur_ = new comboCouleur();
-		comboCouleur_.setBounds(120, 67, 110, 20);
-		m_pMtp.add(comboCouleur_);
+		m_cCouleurs = new comboCouleur();
+		m_cCouleurs.setBounds(120, 67, 110, 20);
+		m_pMtp.add(m_cCouleurs);
+		
+		JPanel m_pContact = new JPanel();
+		m_pContact.setBorder(new TitledBorder(null, "Contact", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		m_pContact.setBounds(10, 145, 759, 85);
+		m_panelRirInfo02.add(m_pContact);
+		m_pContact.setLayout(null);
+		
+		m_tContact = new JTextField();
+		m_tContact.setBounds(47, 35, 160, 20);
+		m_pContact.add(m_tContact);
+		m_tContact.setColumns(10);
+		
+		m_bAddContact = new JButton("");
+		m_bAddContact.setIcon(new ImageIcon(diaAddRirView.class.getResource("/Textures/add.png")));
+		m_bAddContact.setAlignmentX(0.5f);
+		m_bAddContact.setBounds(250, 21, 65, 50);
+		m_pContact.add(m_bAddContact);
+		
+		m_listContact = new JList();
+		DefaultListModel mc = new DefaultListModel();
+		m_listContact.setModel(mc);
+		JScrollPane scrollPane_5 = new JScrollPane(m_listContact);
+		scrollPane_5.setBounds(379, 21, 370, 50);
+		m_pContact.add(scrollPane_5);
 		
 		
-		m_tabbed.addTab("Données à ajouter", null, m_panelData, null);
+		m_tabbed.addTab("Données à ajouter", null, m_panelMetaData, null);
+		m_panelMetaData.setLayout(new BorderLayout(0, 0));
+		
+		m_pMeta = new JPanel();
+		m_panelMetaData.add(m_pMeta, BorderLayout.CENTER);
+		m_pMeta.setLayout(new BorderLayout(0, 0));
+		
+		m_editorMeta = new JEditorPane();
+		scrollPane_6 = new JScrollPane(m_editorMeta);
+		m_pMeta.add(scrollPane_6, BorderLayout.CENTER);
+		
+		m_pPdf = new JPanel();
+		m_pPdf.setBorder(new TitledBorder(null, "Doc Pdf", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		m_panelMetaData.add(m_pPdf, BorderLayout.SOUTH);
+		GridBagLayout gbl_m_pPdf = new GridBagLayout();
+		gbl_m_pPdf.columnWidths = new int[]{171, 0, 0};
+		gbl_m_pPdf.rowHeights = new int[]{23, 0};
+		gbl_m_pPdf.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		gbl_m_pPdf.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		m_pPdf.setLayout(gbl_m_pPdf);
+		
+		m_bLoadPdf = new JButton("Pdf");
+		GridBagConstraints gbc_m_bLoadPdf = new GridBagConstraints();
+		gbc_m_bLoadPdf.insets = new Insets(0, 0, 0, 5);
+		gbc_m_bLoadPdf.fill = GridBagConstraints.BOTH;
+		gbc_m_bLoadPdf.gridx = 0;
+		gbc_m_bLoadPdf.gridy = 0;
+		m_pPdf.add(m_bLoadPdf, gbc_m_bLoadPdf);
+		
+		m_lPdf = new JLabel("");
+		GridBagConstraints gbc_m_lPdf = new GridBagConstraints();
+		gbc_m_lPdf.gridx = 1;
+		gbc_m_lPdf.gridy = 0;
+		m_pPdf.add(m_lPdf, gbc_m_lPdf);
 		
 	
-		
-		
 		
 		m_pInfo.setBackground(Color.GRAY);
 		m_pInfo.setBorder(new TitledBorder(null, "Information", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -188,7 +285,9 @@ public class diaAddRirView extends JDialog
 		gbc_m_lNumero.gridy = 0;
 		m_pInfo.add(m_lNumero, gbc_m_lNumero);
 		
-		m_tNumero = new JTextField();
+		
+		m_tNumero = new JFormattedTextField(new MaskFormatter("  #####/####"));
+		m_tNumero.setFont(new Font("Tahoma", Font.BOLD, 12));
 		GridBagConstraints gbc_m_tNumero = new GridBagConstraints();
 		gbc_m_tNumero.fill = GridBagConstraints.HORIZONTAL;
 		gbc_m_tNumero.insets = new Insets(0, 0, 5, 5);
@@ -205,13 +304,13 @@ public class diaAddRirView extends JDialog
 		gbc_m_lSource.gridy = 0;
 		m_pInfo.add(m_lSource, gbc_m_lSource);
 		
-		comboSources comboSources_ = new comboSources();
-		GridBagConstraints gbc_comboSources_ = new GridBagConstraints();
-		gbc_comboSources_.insets = new Insets(0, 0, 5, 0);
-		gbc_comboSources_.fill = GridBagConstraints.HORIZONTAL;
-		gbc_comboSources_.gridx = 4;
-		gbc_comboSources_.gridy = 0;
-		m_pInfo.add(comboSources_, gbc_comboSources_);
+		m_cSource = new comboSources();
+		GridBagConstraints gbc_m_cSource = new GridBagConstraints();
+		gbc_m_cSource.insets = new Insets(0, 0, 5, 0);
+		gbc_m_cSource.fill = GridBagConstraints.HORIZONTAL;
+		gbc_m_cSource.gridx = 4;
+		gbc_m_cSource.gridy = 0;
+		m_pInfo.add(m_cSource, gbc_m_cSource);
 		
 		JLabel m_lDate = new JLabel("Date:");
 		GridBagConstraints gbc_m_lDate = new GridBagConstraints();
@@ -221,26 +320,15 @@ public class diaAddRirView extends JDialog
 		gbc_m_lDate.gridy = 1;
 		m_pInfo.add(m_lDate, gbc_m_lDate);
 		
-		textField = new JTextField();
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.insets = new Insets(0, 0, 0, 5);
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.gridx = 1;
-		gbc_textField.gridy = 1;
-		m_pInfo.add(textField, gbc_textField);
-		textField.setColumns(10);
-		
-		JPanel m_pButton = new JPanel();
-		m_pButton.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-		m_panelRirInfo.add(m_pButton, BorderLayout.SOUTH);
-		m_pButton.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
-		
-		m_bCancel = new JButton("Annuler");
-		m_bCancel.setHorizontalTextPosition(SwingConstants.CENTER);
-		m_pButton.add(m_bCancel);
-		
-		m_bAjoutRir = new JButton("Ajouter le Rir");
-		m_pButton.add(m_bAjoutRir);
+		m_tDateRir = new JFormattedTextField(new MaskFormatter("  ##/##/####"));
+		m_tDateRir.setFont(new Font("Tahoma", Font.BOLD, 12));
+		GridBagConstraints gbc_m_tDateRir = new GridBagConstraints();
+		gbc_m_tDateRir.insets = new Insets(0, 0, 0, 5);
+		gbc_m_tDateRir.fill = GridBagConstraints.HORIZONTAL;
+		gbc_m_tDateRir.gridx = 1;
+		gbc_m_tDateRir.gridy = 1;
+		m_pInfo.add(m_tDateRir, gbc_m_tDateRir);
+		m_tDateRir.setColumns(10);
 		
 		JPanel m_pData = new JPanel();
 		m_panelRirInfo.add(m_pData, BorderLayout.CENTER);
@@ -340,22 +428,22 @@ public class diaAddRirView extends JDialog
 		m_pPersonne.add(m_lDateNaissance);
 		
 		m_tNom = new JTextField();
-		m_tNom.setBounds(120, 14, 110, 20);
+		m_tNom.setBounds(130, 17, 110, 20);
 		m_pPersonne.add(m_tNom);
 		m_tNom.setColumns(10);
 		
 		m_tPrenom = new JTextField();
-		m_tPrenom.setBounds(120, 39, 110, 20);
+		m_tPrenom.setBounds(130, 42, 110, 20);
 		m_pPersonne.add(m_tPrenom);
 		m_tPrenom.setColumns(10);
 		
 		m_tSurnom = new JTextField();
-		m_tSurnom.setBounds(120, 64, 110, 20);
+		m_tSurnom.setBounds(130, 67, 110, 20);
 		m_pPersonne.add(m_tSurnom);
 		m_tSurnom.setColumns(10);
 		
-		m_tDateNaissance = new JTextField();
-		m_tDateNaissance.setBounds(120, 92, 110, 20);
+		m_tDateNaissance = new JFormattedTextField(new MaskFormatter(" ## / ## / ####"));
+		m_tDateNaissance.setBounds(130, 95, 110, 20);
 		m_pPersonne.add(m_tDateNaissance);
 		m_tDateNaissance.setColumns(10);
 		
@@ -372,14 +460,19 @@ public class diaAddRirView extends JDialog
 		scrollPane_3.setBounds(379, 28, 370, 50);
 		m_pPersonne.add(scrollPane_3);
 		
-	
+		m_pButton = new JPanel();
+		getContentPane().add(m_pButton, BorderLayout.SOUTH);
+		m_pButton.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+		
+		m_bWriteRir = new JButton("Enregistrer");
+		m_bWriteRir.setBackground(Color.GREEN);
+		m_pButton.add(m_bWriteRir);
+		
+		m_bAnnuler = new JButton("Annuler");
+		m_bAnnuler.setBackground(Color.CYAN);
+		m_pButton.add(m_bAnnuler);
 		
 		
-		
-		
-		
-		
-				
 		// model
 		try
 		{
@@ -395,7 +488,92 @@ public class diaAddRirView extends JDialog
 	}
 	
 	
-	
+
+
+	public JTextField getM_tDateRir() {
+		return m_tDateRir;
+	}
+
+
+
+
+	public comboSources getM_cSource() {
+		return m_cSource;
+	}
+
+
+
+
+	public JButton getM_bWriteRir() {
+		return m_bWriteRir;
+	}
+
+
+
+
+	public JButton getM_bAnnuler() {
+		return m_bAnnuler;
+	}
+
+
+
+
+	public JEditorPane getM_editorMeta() {
+		return m_editorMeta;
+	}
+
+
+
+
+	public JButton getM_bLoadPdf() {
+		return m_bLoadPdf;
+	}
+
+
+
+
+	public JLabel getM_lPdf() {
+		return m_lPdf;
+	}
+
+
+
+
+	public JTextField getM_tContact() {
+		return m_tContact;
+	}
+
+
+
+
+	public JButton getM_bAddContact() {
+		return m_bAddContact;
+	}
+
+
+
+
+	public JList getM_listContact() {
+		return m_listContact;
+	}
+
+
+
+
+	public JList getM_listMtp() {
+		return m_listMtp;
+	}
+
+
+
+
+	public comboCouleur getM_cCouleurs() {
+		return m_cCouleurs;
+	}
+
+
+
+
 	public JTextField getM_tDateNaissance() {
 		return m_tDateNaissance;
 	}
@@ -492,7 +670,26 @@ public class diaAddRirView extends JDialog
 
 
 
-	public class diaAddRirControl implements ActionListener,KeyListener
+	public JButton getM_bAddMtp() {
+		return m_bAddMtp;
+	}
+
+
+
+	public JTextField getM_tMarque() {
+		return m_tMarque;
+	}
+
+
+
+
+	public JTextField getM_tImmatriculation() {
+		return m_tImmatriculation;
+	}
+
+
+
+	public class diaAddRirControl implements ActionListener,KeyListener,FocusListener
 	{
 
 		public diaAddRirControl() 
@@ -507,6 +704,15 @@ public class diaAddRirView extends JDialog
 			diaAddRirView.this.getM_listMethode().addKeyListener(this);
 			diaAddRirView.this.getM_bAddPersonne().addActionListener(this);
 			diaAddRirView.this.getM_listPersonne().addKeyListener(this);
+			diaAddRirView.this.getM_bAddMtp().addActionListener(this);
+			diaAddRirView.this.getM_listMtp().addKeyListener(this);
+			diaAddRirView.this.getM_bAddContact().addActionListener(this);
+			diaAddRirView.this.getM_listContact().addKeyListener(this);
+			diaAddRirView.this.getM_bLoadPdf().addActionListener(this);
+			diaAddRirView.this.getM_bWriteRir().addActionListener(this);
+			diaAddRirView.this.getM_bAnnuler().addActionListener(this);
+			// 
+			diaAddRirView.this.getM_tDateRir().addFocusListener(this);
 		}
 
 		@Override
@@ -514,24 +720,27 @@ public class diaAddRirView extends JDialog
 		{
 			if(arg0.getSource() == diaAddRirView.this.getM_bAddQuartier())
 			{
-				Object obj = diaAddRirView.this.getM_comboQuartiers().getSelectedItem();
+				Quartier quartier = new Quartier();
+				quartier.setNom(diaAddRirView.this.getM_comboQuartiers().getSelectedItem().toString());
 				DefaultListModel ml =  (DefaultListModel) diaAddRirView.this.getM_listQuartier().getModel();
-				ml.addElement(obj);
+				ml.addElement(quartier);
 			}
 			
 			// drogues
 			if(arg0.getSource() == diaAddRirView.this.getM_bAddDrogue())
 			{
-				Object obj = diaAddRirView.this.getM_comboDrogues().getSelectedItem();
+				Drogue drogue = new Drogue();
+				drogue.setType(diaAddRirView.this.getM_comboDrogues().getSelectedItem().toString());
 				DefaultListModel ml =  (DefaultListModel) diaAddRirView.this.getM_listDrogue().getModel();
-				ml.addElement(obj);
+				ml.addElement(drogue);
 			}
 			// methodes
 			if(arg0.getSource() == diaAddRirView.this.getM_bAddMethode())
 			{
-				Object obj = diaAddRirView.this.getM_comboMethodes().getSelectedItem();
+				Methode methode = new Methode();
+				methode.setMethode(diaAddRirView.this.getM_comboMethodes().getSelectedItem().toString());
 				DefaultListModel ml =  (DefaultListModel) diaAddRirView.this.getM_listMethode().getModel();
-				ml.addElement(obj);
+				ml.addElement(methode);
 			}
 			
 			// Personnes
@@ -551,6 +760,119 @@ public class diaAddRirView extends JDialog
 				diaAddRirView.this.getM_tDateNaissance().setText("");
 				
 			}
+			// Mtp
+			if(arg0.getSource() == diaAddRirView.this.getM_bAddMtp())
+			{
+				Mtp mtp = new Mtp();
+				mtp.setMarque(diaAddRirView.this.getM_tMarque().getText());
+				mtp.setImmatriculation(diaAddRirView.this.getM_tImmatriculation().getText());
+				mtp.setCouleur(diaAddRirView.this.getM_cCouleurs().getSelectedItem().toString());
+				DefaultListModel ml =  (DefaultListModel) diaAddRirView.this.getM_listMtp().getModel();
+				ml.addElement(mtp);
+				//clear des éléments
+				diaAddRirView.this.getM_tMarque().setText("");
+				diaAddRirView.this.getM_tImmatriculation().setText("");
+				diaAddRirView.this.getM_cCouleurs().setSelectedIndex(0);
+				
+			}
+			// Contacts
+			if(arg0.getSource() == diaAddRirView.this.getM_bAddContact())
+			{
+				NumeroContact contact = new NumeroContact();
+				contact.setNumero(diaAddRirView.this.getM_tContact().getText());
+				DefaultListModel ml =  (DefaultListModel) diaAddRirView.this.getM_listContact().getModel();
+				ml.addElement(contact);
+				//clear des éléments
+				diaAddRirView.this.getM_tContact().setText("");
+				
+				
+			}
+			
+			// Load pdf
+			if(arg0.getSource() == diaAddRirView.this.getM_bLoadPdf())
+			{
+				JFileChooser fc = new JFileChooser();
+				int ret = fc.showOpenDialog(diaAddRirView.this);
+				if(ret == JFileChooser.APPROVE_OPTION)
+				{
+					m_pdfFile = fc.getSelectedFile();
+					if(m_pdfFile != null)
+					{
+						diaAddRirView.this.getM_lPdf().setText(m_pdfFile.getAbsolutePath());
+					}
+				}
+				
+				
+			}
+			// Annuler
+			if(arg0.getSource() == diaAddRirView.this.getM_bAnnuler())
+			{
+				diaAddRirView.this.setVisible(false);
+			}
+			
+			// Enregistrement RIR
+			if(arg0.getSource() == diaAddRirView.this.getM_bWriteRir())
+			{
+				Rir rir = new Rir();
+				rir.setNumero(diaAddRirView.this.getM_tNumero().getText());
+				
+				// date
+				String stringDate = diaAddRirView.this.getM_tDateRir().getText();
+				String[] splitDate = stringDate.trim().split("/");
+				if(splitDate.length == 3)
+				{
+					Calendar cal = Calendar.getInstance();
+					int year = Integer.parseInt(splitDate[2]);
+					int month = Integer.parseInt(splitDate[1]) - 1;
+					int day = Integer.parseInt(splitDate[0]);
+					cal.set(year,month,day);
+					java.sql.Date d = new java.sql.Date(cal.getTimeInMillis());
+					rir.setDateRir(d);
+					
+				}
+				
+				// source
+				rir.setSource(diaAddRirView.this.getM_cSource().getSelectedItem().toString()); 
+				// Quartiers
+				Object[] quartiers =  ((DefaultListModel)diaAddRirView.this.getM_listQuartier().getModel()).toArray();
+				List lq = Arrays.asList(quartiers);
+				rir.setListQuartier(lq);
+				// Drogues
+				Object[] drogues =  ((DefaultListModel)diaAddRirView.this.getM_listDrogue().getModel()).toArray();
+				List ld = Arrays.asList(drogues);
+				rir.setListDrogue(ld);
+				// Methodes
+				Object[] methodes =  ((DefaultListModel)diaAddRirView.this.getM_listMethode().getModel()).toArray();
+				List lm = Arrays.asList(methodes);
+				rir.setListMethode(lm);
+				// Personnes
+				Object[] personnes =  ((DefaultListModel)diaAddRirView.this.getM_listPersonne().getModel()).toArray();
+				List lp = Arrays.asList(personnes);
+				rir.setListPersonne(lp);
+				// Mtp
+				Object[] mtp =  ((DefaultListModel)diaAddRirView.this.getM_listMtp().getModel()).toArray();
+				List lmtp = Arrays.asList(mtp);
+				rir.setListMtp(lmtp);
+				// Contact
+				Object[] contact =  ((DefaultListModel)diaAddRirView.this.getM_listContact().getModel()).toArray();
+				List lc = Arrays.asList(contact);
+				rir.setListNumeroContact(lc);
+				
+				// meta data
+				rir.setNature(diaAddRirView.this.getM_editorMeta().getText());
+				if(m_pdfFile != null)
+				{
+					
+				//FileInputStream fis = new FileInputStream(m_pdfFile);
+				rir.setPathFile(m_pdfFile.getAbsolutePath());
+					
+				}
+				
+				// write Rir
+				SqlLiteInterface.insertRir(rir);
+				diaAddRirView.this.setVisible(false);
+				
+			}
 			
 		
 			
@@ -558,6 +880,11 @@ public class diaAddRirView extends JDialog
 		}
 
 		
+
+		private NumeroContact NumeroContact() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 
 		@Override
 		public void keyPressed(KeyEvent arg0)
@@ -598,6 +925,22 @@ public class diaAddRirView extends JDialog
 						((DefaultListModel)diaAddRirView.this.getM_listPersonne().getModel()).remove(ind);
 					
 				}
+				// Mtp
+				if(arg0.getSource() == diaAddRirView.this.getM_listMtp())
+				{
+					int ind = diaAddRirView.this.getM_listMtp().getSelectedIndex();
+					if(ind != -1)
+						((DefaultListModel)diaAddRirView.this.getM_listMtp().getModel()).remove(ind);
+					
+				}
+				// Contacts
+				if(arg0.getSource() == diaAddRirView.this.getM_listContact())
+				{
+					int ind = diaAddRirView.this.getM_listContact().getSelectedIndex();
+					if(ind != -1)
+						((DefaultListModel)diaAddRirView.this.getM_listContact().getModel()).remove(ind);
+					
+				}
 			}
 			
 		}
@@ -611,6 +954,48 @@ public class diaAddRirView extends JDialog
 		@Override
 		public void keyTyped(KeyEvent arg0) {
 			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void focusGained(FocusEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void focusLost(FocusEvent e) 
+		{
+			if(e.getSource() == diaAddRirView.this.getM_tDateRir() && !diaAddRirView.this.getM_bAnnuler().isSelected())
+			{
+				// lost focus sur la date, vérification de l'intégrité de la date
+				String stringDate = diaAddRirView.this.getM_tDateRir().getText();
+				String[] splitDate = stringDate.trim().split("/");
+				if(splitDate != null && splitDate.length == 3)
+				{
+					try
+					{
+						Calendar c = Calendar.getInstance();
+						c.setLenient(false);
+						int year = Integer.valueOf(splitDate[2]);
+						int month = Integer.valueOf(splitDate[1]) + 1;
+						int day = Integer.valueOf(splitDate[0]);
+						c.set(year, month, day);
+						c.getTime();
+					}
+					catch(IllegalArgumentException ee)
+					{
+						JOptionPane.showMessageDialog(null, "Date du rir incorrecte");
+						diaAddRirView.this.getM_tDateRir().setText("");
+					}
+					
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "Date du rir incorrecte");
+					diaAddRirView.this.getM_tDateRir().setText("");
+				}
+			}
 			
 		}
 		

@@ -471,23 +471,41 @@ public class SqlLiteInterface
 			
 				for(Personne personne : rir.getListPersonne())
 				{
+					
 					PreparedStatement ps = getConnection().prepareStatement(sqlPersonne);
+					
 					ps.setInt(1, result.getInt(1));
 					ps.setString(2, personne.getNom());
 					ps.setString(3, personne.getPrenom());
 					String[] dateNaissance = personne.getDateNaissance().trim().split("/");
 					
-					Calendar cal = Calendar.getInstance();
-					int year = Integer.valueOf(dateNaissance[2].trim());
-					int month = Integer.valueOf(dateNaissance[1].trim());
-					int day = Integer.valueOf(dateNaissance[0].trim());
-					
-					// création du calendar
-					cal.set(year, month - 1, day);
-					// création du date sql
-					java.sql.Date dateSql = new java.sql.Date(cal.getTimeInMillis());
-					// set
-					ps.setDate(4, dateSql);
+					if(dateNaissance != null && dateNaissance.length == 3)
+					{
+						try
+						{
+							Calendar cal = Calendar.getInstance();
+							int year = Integer.valueOf(dateNaissance[2].trim());
+							int month = Integer.valueOf(dateNaissance[1].trim());
+							int day = Integer.valueOf(dateNaissance[0].trim());
+							
+							// création du calendar
+							cal.set(year, month - 1, day);
+							// création du date sql
+							java.sql.Date dateSql = new java.sql.Date(cal.getTimeInMillis());
+							// set
+							ps.setDate(4, dateSql);
+						}catch(SQLException sqle)
+						{
+							ps.setDate(4, null);
+						}
+						catch(Exception ee)
+						{
+							ps.setDate(4, null);
+						}
+						
+					}
+					else
+						ps.setDate(4, null);
 					// set du surnom
 					ps.setString(5, personne.getSurnom());
 					ps.executeUpdate();

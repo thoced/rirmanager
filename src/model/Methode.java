@@ -11,15 +11,15 @@ public class Methode
 	{
 		
 	}
-	public Methode(ResultSet result)
+	public Methode(ResultSet result) throws SQLException
 	{
 		try 
 		{
-			methode = result.getString("methode");
+			methode = result.getString("ref_methode");
 			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) 
+		{
+			methode = result.getString("methode");
 		}
 	}
 	

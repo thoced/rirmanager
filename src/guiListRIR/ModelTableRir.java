@@ -249,11 +249,22 @@ public class ModelTableRir extends DefaultTableModel
 		// TODO Auto-generated method stub
 		
 		// création d'une date formaté
+		SimpleDateFormat format;
 		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(((Rir)listRir.get(arg0)).getDateRir().getTime());
-		String formatString = "dd/MM/yyyy";
-		SimpleDateFormat format = new SimpleDateFormat(formatString);
-		
+		try
+		{
+			
+			cal.setTimeInMillis(((Rir)listRir.get(arg0)).getDateRir().getTime());
+			String formatString = "dd/MM/yyyy";
+			format = new SimpleDateFormat(formatString);
+		}
+		catch(NullPointerException npe)
+		{
+			
+			cal.setTimeInMillis(0);
+			String formatString = "dd/MM/yyyy";
+			format = new SimpleDateFormat(formatString);
+		}
 		switch(arg1)
 		{
 		case 0: return arg0 + 1;

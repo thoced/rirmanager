@@ -13,10 +13,10 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.text.ParseException;
 
 import gui.diaAdd;
 import gui.diaAddRirView;
-import gui.diaNewRir;
 import gui.panelAdd;
 import gui.panelList;
 
@@ -65,8 +65,18 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.border.TitledBorder;
 
-import guiSearchEffect.CtrlSearchEffect;
-import guiSearchEffect.panelSearchEffect;
+
+import guiSearchEffect.modelContact;
+import guiSearchEffect.panelAnalyse;
+
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import java.awt.Color;
+import javax.swing.JScrollPane;
+import net.miginfocom.swing.MigLayout;
+import java.awt.event.WindowFocusListener;
+import java.awt.Font;
+import java.awt.Frame;
 
 public class mainProgram implements ICallBackMVC, ActionListener{
 
@@ -83,12 +93,13 @@ public class mainProgram implements ICallBackMVC, ActionListener{
 	private JMenuItem mRechercheContact;
 	private JMenuItem mRechercheInfo;
 	private panelLogo panelLogo;
-	private panelSearchEffect panelSearchEffect;
-	private CtrlSearchEffect ctrlSearch;
-	private JMenu menuConfig;
-	private JMenuItem mntmNewMenuItem;
 	private JMenu menuAide;
 	private JMenuItem mAbout;
+	private panelAnalyse m_panelAnalyse;
+	private JScrollPane scrollPane;
+	private JTable m_tableAnalyseContact;
+	private JLabel m_lDev;
+	private JPanel panelDev;
 	/**
 	 * Launch the application.
 	 */
@@ -117,6 +128,20 @@ public class mainProgram implements ICallBackMVC, ActionListener{
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+		
+		
+		// icon
+		frame.setIconImage(new ImageIcon(this.getClass().getResource("/Textures/logoico.png")).getImage());
+		
+		frame.addWindowFocusListener(new WindowFocusListener() {
+			public void windowGainedFocus(WindowEvent arg0) 
+			{
+				m_panelAnalyse.updateAnalyse();
+			}
+			public void windowLostFocus(WindowEvent arg0) {
+			}
+		});
 		frame.addWindowListener(new WindowAdapter() {
 			
 			@Override
@@ -191,12 +216,6 @@ public class mainProgram implements ICallBackMVC, ActionListener{
 		mRechercheInfo.setActionCommand("RECHERCHE_INFO");
 		menuRecherche.add(mRechercheInfo);
 		
-		menuConfig = new JMenu("Configuration");
-		menuBar.add(menuConfig);
-		
-		mntmNewMenuItem = new JMenuItem("Connexion SGBD");
-		menuConfig.add(mntmNewMenuItem);
-		
 		menuAide = new JMenu("Aide");
 		menuBar.add(menuAide);
 		
@@ -209,10 +228,21 @@ public class mainProgram implements ICallBackMVC, ActionListener{
 		panelLogo = new panelLogo();
 		frame.getContentPane().add(panelLogo, BorderLayout.CENTER);
 		
-		panelSearchEffect = new panelSearchEffect();
-		frame.getContentPane().add(panelSearchEffect, BorderLayout.SOUTH);
+		m_panelAnalyse = new panelAnalyse();
 		
-		ctrlSearch = new CtrlSearchEffect(panelSearchEffect);
+		frame.getContentPane().add(m_panelAnalyse, BorderLayout.SOUTH);
+		
+		panelDev = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) panelDev.getLayout();
+		flowLayout.setAlignment(FlowLayout.RIGHT);
+		frame.getContentPane().add(panelDev, BorderLayout.NORTH);
+		
+		m_lDev = new JLabel("Developp\u00E9 par THONON C\u00E9dric");
+		m_lDev.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		panelDev.add(m_lDev);
+		
+		
+		
 		
 		// instance du sqlinterface
 		sqlLite = new SqlLiteInterface();
@@ -251,11 +281,19 @@ public class mainProgram implements ICallBackMVC, ActionListener{
 		switch(e.getActionCommand())
 		{
 			case "ADDRIR" : 	//diaNewRir dia = new diaNewRir(null,"Ajout de RIR",true);
-								diaAddRirView dia = new diaAddRirView(null,"Ajout de RIR",true);
+								diaAddRirView dia;
+								try {
+										dia = new diaAddRirView(null,"Ajout de RIR",true);
+										dia.setVisible(true);
+									} 
+								catch (ParseException e1) 
+								{
+											// TODO Auto-generated catch block
+											e1.printStackTrace();
+									}
 			
-								dia.setVisible(true);
-								// appel au search automatique
-								ctrlSearch.UpdateSearch();
+								
+								
 								break;
 			
 			case "LISTRIR":		CtrlListRir ctrlListRir = new CtrlListRir();

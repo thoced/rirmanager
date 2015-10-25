@@ -9,7 +9,13 @@ public class Couleur
 	
 	public Couleur(ResultSet result) throws SQLException
 	{
-		couleur = result.getString("couleur");
+		try 
+		{
+			couleur = result.getString("couleur");
+		} catch (SQLException e) 
+		{
+			couleur = result.getString("ref_couleur");
+		}
 	}
 
 	public String getCouleur() {

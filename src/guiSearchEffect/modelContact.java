@@ -18,7 +18,6 @@ public class modelContact extends DefaultTableModel
 	private List<ContactSearch> listRir;
 
 	
-	
 	public List<ContactSearch> getListRir() {
 		return listRir;
 	}

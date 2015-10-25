@@ -19,20 +19,28 @@ public class Personne
 	
 	public Personne(ResultSet result)
 	{
-		try {
+		try
+		{
 		nom = result.getString("nom");
 		prenom  = result.getString("prenom");
+		surnom = result.getString("surnom");
+		
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(result.getDate("datenaissance").getTime());
 		String sf = "dd/MM/yyyy";
 		SimpleDateFormat format = new SimpleDateFormat(sf);
 		dateNaissance = format.format(cal.getTime());
 		
-		surnom = result.getString("surnom");
 		
-		} catch (SQLException e) {
+		
+		} catch (SQLException e) 
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		catch(NullPointerException npe)
+		{
+			
 		}
 	}
 	

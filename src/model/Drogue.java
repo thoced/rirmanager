@@ -12,15 +12,15 @@ public class Drogue
 		
 	}
 	
-	public Drogue(ResultSet result)
+	public Drogue(ResultSet result) throws SQLException
 	{
 		try
 		{
-			type = result.getString("drogue");
+			type = result.getString("ref_drogue");
 			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e)
+		{
+			type = result.getString("drogue");
 		}
 	}
 	

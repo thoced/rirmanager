@@ -1,18 +1,40 @@
 package model;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class PersonneSearch 
 {
 	private String nom;
-	private String prenon;
+	private String prenom;
 	private String surnom;
 	private String datenaisance;
-	private String nb;
+	private int nb;
 	
 	public PersonneSearch(ResultSet result)
 	{
-		
+		try 
+		{
+			nom  = result.getString("nom");
+			prenom = result.getString("prenom");
+			surnom = result.getString("surnom");
+			Calendar cal = Calendar.getInstance();
+			cal.setTimeInMillis(result.getDate("datenaissance").getTime());
+			String sf = "dd/MM/yyyy";
+			SimpleDateFormat format = new SimpleDateFormat(sf);
+			datenaisance = format.format(cal.getTime());
+			nb = result.getInt("nb");
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (NullPointerException e)
+		{
+			
+		}
 		
 	}
 	
@@ -23,10 +45,10 @@ public class PersonneSearch
 		this.nom = nom;
 	}
 	public String getPrenon() {
-		return prenon;
+		return prenom;
 	}
 	public void setPrenon(String prenon) {
-		this.prenon = prenon;
+		this.prenom = prenon;
 	}
 	public String getSurnom() {
 		return surnom;
@@ -41,10 +63,10 @@ public class PersonneSearch
 		this.datenaisance = datenaisance;
 	}
 	public String getNb() {
-		return nb;
+		return String.valueOf(nb);
 	}
 	public void setNb(String nb) {
-		this.nb = nb;
+		this.nb = Integer.parseInt(nb);
 	}
 	
 	

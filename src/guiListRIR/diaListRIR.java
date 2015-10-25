@@ -50,7 +50,7 @@ public class diaListRIR extends JDialog
 	public diaListRIR(Frame frame,String title,boolean modal)
 	{
 		super(frame,title,modal);
-		this.setSize(1000, 800);
+		this.setSize(1000, 719);
 		getContentPane().setLayout(null);
 		
 		tableListRir = new JTable();
@@ -85,7 +85,7 @@ public class diaListRIR extends JDialog
 			lblNewLabel.setBounds(10, 50, 100, 14);
 			panelInfo.add(lblNewLabel);
 			
-			JLabel lblNewLabel_1 = new JLabel("Emission:");
+			JLabel lblNewLabel_1 = new JLabel("Source:");
 			lblNewLabel_1.setBounds(10, 75, 100, 14);
 			panelInfo.add(lblNewLabel_1);
 			
@@ -172,14 +172,14 @@ public class diaListRIR extends JDialog
 			tNatureInfo.setLineWrap(true);
 			tNatureInfo.setColumns(25);
 			scrollPane_7 = new JScrollPane(tNatureInfo);
-			scrollPane_7.setBounds(120, 539, 351, 190);
+			scrollPane_7.setBounds(120, 528, 351, 140);
 			panelInfo.add(scrollPane_7);
 			
 			bViewData = new JButton("View PDF");
 			bViewData.setEnabled(false);
 			bViewData.setBackground(SystemColor.activeCaption);
 			bViewData.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			bViewData.setBounds(10, 615, 89, 60);
+			bViewData.setBounds(10, 564, 89, 60);
 			panelInfo.add(bViewData);
 					
 		

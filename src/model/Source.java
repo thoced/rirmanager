@@ -7,18 +7,22 @@ public class Source
 {
 	private String source;
 
-	public Source(ResultSet result)
+	public Source(ResultSet result) throws SQLException
 	{
 		try 
 		{
 			source = result.getString("source");
 			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) 
+		{
+			source = result.getString("ref_source");
 		}
 	}
 	
+	public Source() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getSource() {
 		return source;
 	}
