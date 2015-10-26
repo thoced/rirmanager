@@ -22,7 +22,7 @@ public class diaAbout extends JDialog
 		getContentPane().setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBorder(new TitledBorder(null, "Au sujet de RirManager", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.setBorder(new TitledBorder(null, "Au sujet de RirDrugsManager", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.setBounds(10, 11, 764, 340);
 		getContentPane().add(panel);
 		panel.setLayout(null);
@@ -35,7 +35,7 @@ public class diaAbout extends JDialog
 		JEditorPane editorPane = new JEditorPane();
 		editorPane.setEnabled(false);
 		editorPane.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		editorPane.setText("Rir Drugs Manager analyse les informations contenues dans les Rapports d'informations"); 
+		editorPane.setText("Rir Drugs Manager permet l'encodage, la gestion et l'analyse des informations contenues dans les Rapports d'informations."); 
 		editorPane.setEditable(false);
 		JScrollPane scrollPane = new JScrollPane(editorPane);
 		scrollPane.setBounds(10, 28, 591, 268);

@@ -41,14 +41,12 @@ public class CtrlListRir implements ActionListener,MouseListener
 	
 	public CtrlListRir()
 	{
-		dia = new diaListRIR(null,"List des RIR",true);
+		dia = new diaListRIR(null,"Liste des RIR",true);
 		dia.getTableListRir().setFont(UIManager.getFont("Table.font"));
 		modelRir = new ModelTableRir();
 		dia.getTableListRir().setModel(modelRir);
 		dia.getTableListRir().addMouseListener(this);
-		
-		
-		
+				
 		// bviewpdf
 		dia.getbViewData().addActionListener(this);
 		dia.getbViewData().setActionCommand("VIEWPDF");
@@ -72,9 +70,23 @@ public class CtrlListRir implements ActionListener,MouseListener
 		dia.setVisible(true);
 	}
 	
-	public void RechercheFromPersonne(String nom,String prenom,String surnom)
+	public void RechercheFromPersonne(String nom,String prenom,String datenaissance)
 	{
-		modelRir.SelectFromPersonne(nom, prenom, surnom);
+		modelRir.SelectFromPersonne(nom,prenom,datenaissance);
+		dia.getTableListRir().updateUI();
+		dia.setVisible(true);
+	}
+	
+	public void RechercheFromNom(String nom)
+	{
+		modelRir.SelectFromNom(nom);
+		dia.getTableListRir().updateUI();
+		dia.setVisible(true);
+	}
+	
+	public void RechercheFromPrenom(String prenom)
+	{
+		modelRir.SelectFromPrenom(prenom);
 		dia.getTableListRir().updateUI();
 		dia.setVisible(true);
 	}
@@ -110,7 +122,11 @@ public class CtrlListRir implements ActionListener,MouseListener
 	@Override
 	public void mouseClicked(MouseEvent arg0) 
 	{
-		
+		if(arg0.getButton() == MouseEvent.BUTTON3)
+		{
+			// si bouton droit
+			
+		}
 
 	}
 

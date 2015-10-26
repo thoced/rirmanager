@@ -77,6 +77,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import java.awt.Font;
+import components.comboTypeMtp;
 
 public class diaAddRirView extends JDialog 
 {
@@ -133,6 +134,7 @@ public class diaAddRirView extends JDialog
 	private JLabel m_lPdf;
 	private comboSources m_cSource;
 	private File m_pdfFile;
+	private comboTypeMtp m_cTypeMtp;
 
 	public diaAddRirView(Frame arg0, String arg1, boolean arg2) throws ParseException {
 		super(arg0, arg1, arg2);
@@ -175,7 +177,7 @@ public class diaAddRirView extends JDialog
 		m_pMtp.add(m_lImmatriculation);
 		
 		m_lCouleur = new JLabel("Couleur:");
-		m_lCouleur.setBounds(10, 67, 110, 14);
+		m_lCouleur.setBounds(10, 98, 110, 14);
 		m_pMtp.add(m_lCouleur);
 		
 		m_tMarque = new JTextField();
@@ -202,8 +204,16 @@ public class diaAddRirView extends JDialog
 		m_pMtp.add(scrollPane_4);
 		
 		m_cCouleurs = new comboCouleur();
-		m_cCouleurs.setBounds(120, 67, 110, 20);
+		m_cCouleurs.setBounds(120, 95, 110, 20);
 		m_pMtp.add(m_cCouleurs);
+		
+		JLabel m_lType = new JLabel("Type:");
+		m_lType.setBounds(10, 73, 80, 14);
+		m_pMtp.add(m_lType);
+		
+		m_cTypeMtp = new comboTypeMtp();
+		m_cTypeMtp.setBounds(120, 67, 110, 20);
+		m_pMtp.add(m_cTypeMtp);
 		
 		JPanel m_pContact = new JPanel();
 		m_pContact.setBorder(new TitledBorder(null, "Contact", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
@@ -286,7 +296,7 @@ public class diaAddRirView extends JDialog
 		m_pInfo.add(m_lNumero, gbc_m_lNumero);
 		
 		
-		m_tNumero = new JFormattedTextField(new MaskFormatter("  #####/####"));
+		m_tNumero = new JFormattedTextField(new MaskFormatter("  ######/####"));
 		m_tNumero.setFont(new Font("Tahoma", Font.BOLD, 12));
 		GridBagConstraints gbc_m_tNumero = new GridBagConstraints();
 		gbc_m_tNumero.fill = GridBagConstraints.HORIZONTAL;
@@ -488,20 +498,18 @@ public class diaAddRirView extends JDialog
 	}
 	
 	
-
+	public comboTypeMtp getM_cTypeMtp() {
+		return m_cTypeMtp;
+	}
 
 	public JTextField getM_tDateRir() {
 		return m_tDateRir;
 	}
 
 
-
-
 	public comboSources getM_cSource() {
 		return m_cSource;
 	}
-
-
 
 
 	public JButton getM_bWriteRir() {
@@ -767,12 +775,14 @@ public class diaAddRirView extends JDialog
 				mtp.setMarque(diaAddRirView.this.getM_tMarque().getText());
 				mtp.setImmatriculation(diaAddRirView.this.getM_tImmatriculation().getText());
 				mtp.setCouleur(diaAddRirView.this.getM_cCouleurs().getSelectedItem().toString());
+				mtp.setType(diaAddRirView.this.getM_cTypeMtp().getSelectedItem().toString());
 				DefaultListModel ml =  (DefaultListModel) diaAddRirView.this.getM_listMtp().getModel();
 				ml.addElement(mtp);
 				//clear des éléments
 				diaAddRirView.this.getM_tMarque().setText("");
 				diaAddRirView.this.getM_tImmatriculation().setText("");
 				diaAddRirView.this.getM_cCouleurs().setSelectedIndex(0);
+				diaAddRirView.this.getM_cTypeMtp().setSelectedIndex(0);
 				
 			}
 			// Contacts

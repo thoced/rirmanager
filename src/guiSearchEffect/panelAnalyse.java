@@ -7,8 +7,9 @@ import com.jgoodies.forms.layout.RowSpec;
 
 import guiListRIR.CtrlListRir;
 import model.ContactSearch;
+import model.NomManySearch;
 import model.Personne;
-import model.PersonneSearch;
+import model.PrenomManySearch;
 import model.Rir;
 import model.SqlLiteInterface;
 
@@ -33,6 +34,13 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import javax.swing.border.TitledBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.MatteBorder;
 
 public class panelAnalyse extends JPanel 
 {
@@ -41,6 +49,8 @@ public class panelAnalyse extends JPanel
 	private panelAnalyseModel model;
 	private panelAnalyseControl control;
 	private JTable m_tableAnalysePersonne;
+	private JScrollPane scrollPane_2;
+	private JTable m_tableAnalysePrenom;
 
 	public panelAnalyse() 
 	{
@@ -50,23 +60,35 @@ public class panelAnalyse extends JPanel
 		
 		
 		setBackground(Color.GRAY);
-		setLayout(new MigLayout("", "[250.00,center][]", "[106.00,grow]"));
+		setLayout(new MigLayout("", "[250.00,center][180.00][180.00][-34.00,grow]", "[140.00]"));
 		
 		m_tableAnalyseContact = new JTable();
+		m_tableAnalyseContact.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		m_tableAnalyseContact.setBackground(Color.ORANGE);
 		modelContact mc = new modelContact();
 		m_tableAnalyseContact.setModel(mc);
 		JScrollPane scrollPane = new JScrollPane(m_tableAnalyseContact);
+		scrollPane.setViewportBorder(new LineBorder(UIManager.getColor("InternalFrame.activeTitleGradient"), 2, true));
 		add(scrollPane, "cell 0 0,grow");
 		
 		m_tableAnalysePersonne = new JTable();
+		m_tableAnalysePersonne.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		m_tableAnalysePersonne.setBackground(Color.ORANGE);
-		modelPersonne  mp =  new modelPersonne();
+		modelNom  mp =  new modelNom();
 		m_tableAnalysePersonne.setModel(mp);
 		JScrollPane scrollPane_1 = new JScrollPane(m_tableAnalysePersonne);
+		scrollPane_1.setViewportBorder(new LineBorder(UIManager.getColor("InternalFrame.activeTitleGradient"), 2, true));
 		add(scrollPane_1, "flowx,cell 1 0,grow");
 		
-	
+		m_tableAnalysePrenom = new JTable();
+		m_tableAnalysePrenom.setBackground(Color.ORANGE);
+		m_tableAnalysePrenom.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		modelPrenom mpr = new modelPrenom();
+		m_tableAnalysePrenom.setModel(mpr);
+		scrollPane_2 = new JScrollPane(m_tableAnalysePrenom);
+		scrollPane_2.setViewportBorder(new LineBorder(UIManager.getColor("InternalFrame.activeTitleGradient"), 2, true));
+		add(scrollPane_2, "cell 2 0,grow");
+		
 		
 		model = new panelAnalyseModel();
 		control = new panelAnalyseControl();
@@ -104,6 +126,18 @@ public class panelAnalyse extends JPanel
 
 
 
+	
+
+
+	public JTable getM_tableAnalysePrenom() {
+		return m_tableAnalysePrenom;
+	}
+
+
+
+
+
+
 	public class panelAnalyseControl implements MouseListener
 	{
 
@@ -114,12 +148,18 @@ public class panelAnalyse extends JPanel
 			// listener
 			panelAnalyse.this.getM_tableAnalyseContact().addMouseListener(this);
 			panelAnalyse.this.getM_tableAnalysePersonne().addMouseListener(this);
+			panelAnalyse.this.getM_tableAnalysePrenom().addMouseListener(this);
 			
 		}
 
 		@Override
 		public void mouseClicked(MouseEvent arg0) 
 		{
+			
+			// si click sur bouton centrale et bouton droit, on quitte
+			if(arg0.getButton() == MouseEvent.BUTTON3 || arg0.getButton() == MouseEvent.BUTTON2)
+				return;
+			
 			// AnalyseContact
 			if(arg0.getSource() == panelAnalyse.this.getM_tableAnalyseContact())
 			{
@@ -129,15 +169,23 @@ public class panelAnalyse extends JPanel
 				ct.RechercheFromContact(contact.getContact());
 			}
 			
-			// AnalysePersonne
+			// AnalyseNom
 			if(arg0.getSource() == panelAnalyse.this.getM_tableAnalysePersonne())
 			{
 				int row = panelAnalyse.this.getM_tableAnalysePersonne().getSelectedRow();
-				PersonneSearch personne = (PersonneSearch) ((modelPersonne)panelAnalyse.this.getM_tableAnalysePersonne().getModel()).getListPersonne().get(row);
+				NomManySearch personne = (NomManySearch) ((modelNom)panelAnalyse.this.getM_tableAnalysePersonne().getModel()).getListPersonne().get(row);
 				CtrlListRir ct = new CtrlListRir();
-				ct.RechercheFromPersonne(personne.getNom(), personne.getPrenon(), personne.getSurnom());
+				ct.RechercheFromNom(personne.getNom());
 			}
 			
+			// AnalysePrenom
+			if(arg0.getSource() == panelAnalyse.this.getM_tableAnalysePrenom())
+			{
+				int row = panelAnalyse.this.getM_tableAnalysePrenom().getSelectedRow();
+				PrenomManySearch personne = (PrenomManySearch) ((modelPrenom)panelAnalyse.this.getM_tableAnalysePrenom().getModel()).getListPersonne().get(row);
+				CtrlListRir ct = new CtrlListRir();
+				ct.RechercheFromPrenom(personne.getPrenom());
+			}
 		}
 
 		@Override
@@ -200,16 +248,16 @@ public class panelAnalyse extends JPanel
 							e.printStackTrace();
 						}
 						
-		    // personne
+		    // nomnne
 						try 
 						{
 							
-							modelPersonne mp = (modelPersonne)panelAnalyse.this.getM_tableAnalysePersonne().getModel();
+							modelNom mp = (modelNom)panelAnalyse.this.getM_tableAnalysePersonne().getModel();
 							mp.getListPersonne().clear();
 							ResultSet result = SqlLiteInterface.SelectManyPersonne();
 							while(result.next())
 							{
-								PersonneSearch p = new PersonneSearch(result);
+								NomManySearch p = new NomManySearch(result);
 								mp.getListPersonne().add(p);
 							}
 							
@@ -218,7 +266,27 @@ public class panelAnalyse extends JPanel
 						} catch (ClassNotFoundException | SQLException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
-						}						
+						}			
+						
+			// prenom
+						try 
+						{
+							
+							modelPrenom mp = (modelPrenom)panelAnalyse.this.getM_tableAnalysePrenom().getModel();
+							mp.getListPersonne().clear();
+							ResultSet result = SqlLiteInterface.SelectManyPrenom();
+							while(result.next())
+							{
+								PrenomManySearch p = new PrenomManySearch(result);
+								mp.getListPersonne().add(p);
+							}
+							
+							panelAnalyse.this.getM_tableAnalysePersonne().updateUI();
+							
+						} catch (ClassNotFoundException | SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}			
 						
 		}
 		

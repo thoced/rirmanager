@@ -253,6 +253,7 @@ public class SqlLiteInterface
 				+ "marque VARCHAR(64),"
 				+ "immatriculation VARCHAR(64),"
 				+ "couleur VARCHAR(64),"
+				+ "type VARCHAR(64),"
 				+ "ref_rir INTEGER,"
 				+ "FOREIGN KEY(ref_rir) REFERENCES t_rir(id))";
 		
@@ -262,7 +263,7 @@ public class SqlLiteInterface
 		
 		String sql_source = "create table IF NOT EXISTS t_source (source VARCHAR(64) UNIQUE)";
 		
-		
+		String sql_type_mtp = "create table IF NOT EXISTS t_type_mtp (type VARCHAR(64) UNIQUE)";
 				
 		// creation des tables de link
 		
@@ -304,6 +305,8 @@ public class SqlLiteInterface
 		st.executeUpdate(sql_mtp);
 		// creation de la table couleur
 		st.executeUpdate(sql_couleur);
+		// creation de la table type mtp
+		st.executeUpdate(sql_type_mtp);
 		// creation de la table methode
 		st.executeUpdate(sql_methode);
 		// creation de la table source
@@ -326,8 +329,7 @@ public class SqlLiteInterface
 			st.executeUpdate("insert into t_quartier (quartier) values('Jemeppe')");
 			st.executeUpdate("insert into t_quartier (quartier) values('Neupré')");
 			st.executeUpdate("insert into t_quartier (quartier) values('Indéterminé')");
-			st.executeUpdate("insert into t_quartier (quartier) values('Liège')");
-			
+						
 			st.executeUpdate("insert into t_drogue (drogue) values('Cannabis')");
 			st.executeUpdate("insert into t_drogue (drogue) values('Cocaïne')");
 			st.executeUpdate("insert into t_drogue (drogue) values('Heroïne')");
@@ -338,6 +340,7 @@ public class SqlLiteInterface
 			st.executeUpdate("insert into t_methode (methode) values('Détention')");
 			st.executeUpdate("insert into t_methode (methode) values('Fabrication')");
 			st.executeUpdate("insert into t_methode (methode) values('Culture')");
+			st.executeUpdate("insert into t_methode (methode) values('Import/Export')");
 			st.executeUpdate("insert into t_methode (methode) values('Indéterminé')");
 			
 			st.executeUpdate("insert into t_couleur (couleur) values('Blanc')");
@@ -349,14 +352,36 @@ public class SqlLiteInterface
 			st.executeUpdate("insert into t_couleur (couleur) values('Vert')");
 			st.executeUpdate("insert into t_couleur (couleur) values('Bleu')");
 			
-			st.executeUpdate("insert into t_source (source) values('ZP Seraing-Neupré')");
-			st.executeUpdate("insert into t_source (source) values('ZP Liège')");
-			st.executeUpdate("insert into t_source (source) values('ZP Secova')");
-			st.executeUpdate("insert into t_source (source) values('ZP Grace-Hollogne / Awans')");
-			st.executeUpdate("insert into t_source (source) values('ZP Flémalle')");
-			st.executeUpdate("insert into t_source (source) values('ZP Fléron')");
+			st.executeUpdate("insert into t_type_mtp (type) values('Vehicule (4 roues)')");
+			st.executeUpdate("insert into t_type_mtp (type) values('Vehicule (2 roues)')");
+			st.executeUpdate("insert into t_type_mtp (type) values('Vehicule (3 roues)')");
+			st.executeUpdate("insert into t_type_mtp (type) values('Transport en commun')");
+			st.executeUpdate("insert into t_type_mtp (type) values('Taxi')");
+			st.executeUpdate("insert into t_type_mtp (type) values('Indéterminé')");
+			
+			st.executeUpdate("insert into t_source (source) values('ZP 5277 LIEGE')");
+			st.executeUpdate("insert into t_source (source) values('ZP 5278 SERAING - NEUPRE')");
+			st.executeUpdate("insert into t_source (source) values('ZP 5279 HERSTAL')");
+			st.executeUpdate("insert into t_source (source) values('ZP 5280 BEYNE-FLERON-SOUMAGNE')");
+			st.executeUpdate("insert into t_source (source) values('ZP 5281 BASSE MEUSE')");
+			st.executeUpdate("insert into t_source (source) values('ZP 5282 FLEMALLE')");
+			st.executeUpdate("insert into t_source (source) values('ZP 5283 SECOVA')");
+			st.executeUpdate("insert into t_source (source) values('ZP 5285 AWANS / GRACE-HOLLOGNE')");
+			st.executeUpdate("insert into t_source (source) values('ZP 5286 HESBAYE')");
+			st.executeUpdate("insert into t_source (source) values('ZP 5287 FAGNES')");
+			st.executeUpdate("insert into t_source (source) values('ZP 5288 PAYS DE HERVE')");
+			st.executeUpdate("insert into t_source (source) values('ZP 5289 VESDRE')");
+			st.executeUpdate("insert into t_source (source) values('ZP 5290 STAVELOT - MALMEDY')");
+			st.executeUpdate("insert into t_source (source) values('ZP 5291 EIFEL')");
+			st.executeUpdate("insert into t_source (source) values('ZP 5292 WESER-GÖHL')");
+			st.executeUpdate("insert into t_source (source) values('ZP 5293 HESBAYE OUEST')");
+			st.executeUpdate("insert into t_source (source) values('ZP 5294 MEUSE - HESBAYE')");
+			st.executeUpdate("insert into t_source (source) values('ZP 5295 HUY')");
+			st.executeUpdate("insert into t_source (source) values('ZP 5296 ZP DU CONDROZ')");
+			st.executeUpdate("insert into t_source (source) values('ZP (Autres)')");
 			st.executeUpdate("insert into t_source (source) values('PJF Liège')");
 			st.executeUpdate("insert into t_source (source) values('PJF (Autres)')");
+			st.executeUpdate("insert into t_source (source) values('PJF (SIC)')");
 			st.executeUpdate("insert into t_source (source) values('DGJ')");
 			
 		
@@ -514,7 +539,7 @@ public class SqlLiteInterface
 				
 				// insert des moyens de transport
 				
-				String sqlMtp = "insert into t_mtp (ref_rir,marque,immatriculation,couleur) values (?,?,?,?)";
+				String sqlMtp = "insert into t_mtp (ref_rir,marque,immatriculation,couleur,type) values (?,?,?,?,?)";
 				
 				for(Mtp mtp : rir.getListMtp())
 				{
@@ -523,6 +548,7 @@ public class SqlLiteInterface
 					ps.setString(2, mtp.getMarque());
 					ps.setString(3, mtp.getImmatriculation());
 					ps.setString(4, mtp.getCouleur());
+					ps.setString(5, mtp.getType());
 					ps.executeUpdate();
 				}
 				
@@ -595,6 +621,15 @@ public class SqlLiteInterface
 	public static ResultSet SelectAllCouleur() throws ClassNotFoundException, SQLException
 	{
 		String sql = "select couleur from t_couleur";
+		
+		Statement st = getConnection().createStatement();
+		
+		return st.executeQuery(sql);
+	}
+	
+	public static ResultSet SelectAllTypeMtp() throws ClassNotFoundException, SQLException
+	{
+		String sql = "select type from t_type_mtp";
 		
 		Statement st = getConnection().createStatement();
 		
@@ -761,6 +796,34 @@ public class SqlLiteInterface
 		
 	}
 	
+	public static ResultSet SelectRirFromNom(String nom) throws ClassNotFoundException, SQLException
+	{
+		String sql = "select t_rir.id,daterir,numero,nature,source from t_rir INNER JOIN t_personne ON t_rir.id = t_personne.ref_rir where nom = ? ";
+		
+		PreparedStatement ps = getConnection().prepareStatement(sql);
+		ps.setString(1, nom);
+				
+		
+		return ps.executeQuery();
+		
+		
+		
+	}
+	
+	public static ResultSet SelectRirFromPrenom(String prenom) throws ClassNotFoundException, SQLException
+	{
+		String sql = "select t_rir.id,daterir,numero,nature,source from t_rir INNER JOIN t_personne ON t_rir.id = t_personne.ref_rir where prenom = ? ";
+		
+		PreparedStatement ps = getConnection().prepareStatement(sql);
+		ps.setString(1, prenom);
+				
+		
+		return ps.executeQuery();
+		
+		
+		
+	}
+	
 	public static ResultSet SelectRirFromMtp(String marque,String immatriculation,String couleur) throws ClassNotFoundException, SQLException
 	{
 		marque = "%" + marque + "%";
@@ -809,7 +872,21 @@ public class SqlLiteInterface
 	
 	public static ResultSet SelectManyPersonne() throws ClassNotFoundException, SQLException
 	{
-		String sql = "select nom,prenom,surnom,datenaissance,nb from (select nom,prenom,surnom,datenaissance,count(nom) nb from t_personne group by nom ) td where td.nb > 1";
+		String sql = "select nom,nb from (select nom,count(nom) nb from t_personne group by nom ) td where td.nb > 1";
+		
+		//String sql = "select nom,prenom,surnom,datenaissance,nb,nbprenom from (select nom,prenom,surnom,datenaissance,count(nom) nb,count(prenom) nbprenom from t_personne group by nom ) td where td.nb > 1 OR td.nbprenom > 1";
+		
+		
+		Statement st =  getConnection().createStatement();
+		return st.executeQuery(sql);
+		
+	}
+	
+	public static ResultSet SelectManyPrenom() throws ClassNotFoundException, SQLException
+	{
+		String sql = "select prenom,nb from (select prenom,count(prenom) nb from t_personne group by prenom ) td where td.nb > 1";
+		
+		//String sql = "select nom,prenom,surnom,datenaissance,nb,nbprenom from (select nom,prenom,surnom,datenaissance,count(nom) nb,count(prenom) nbprenom from t_personne group by nom ) td where td.nb > 1 OR td.nbprenom > 1";
 		
 		Statement st =  getConnection().createStatement();
 		return st.executeQuery(sql);

@@ -21,6 +21,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import java.awt.SystemColor;
+import javax.swing.UIManager;
+import java.awt.Color;
 
 public class diaListRIR extends JDialog 
 {
@@ -50,6 +52,7 @@ public class diaListRIR extends JDialog
 	public diaListRIR(Frame frame,String title,boolean modal)
 	{
 		super(frame,title,modal);
+		getContentPane().setBackground(new Color(240,240,240));
 		this.setSize(1000, 719);
 		getContentPane().setLayout(null);
 		
@@ -177,7 +180,7 @@ public class diaListRIR extends JDialog
 			
 			bViewData = new JButton("View PDF");
 			bViewData.setEnabled(false);
-			bViewData.setBackground(SystemColor.activeCaption);
+			bViewData.setBackground(UIManager.getColor("InternalFrame.activeTitleGradient"));
 			bViewData.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			bViewData.setBounds(10, 564, 89, 60);
 			panelInfo.add(bViewData);

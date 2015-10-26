@@ -64,7 +64,7 @@ public class Personne
 		return nom;
 	}
 	public void setNom(String nom) {
-		this.nom = nom;
+		this.nom = nom.trim().toUpperCase();
 	}
 	public String getPrenom() {
 		return prenom;

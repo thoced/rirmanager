@@ -219,7 +219,7 @@ public class mainProgram implements ICallBackMVC, ActionListener{
 		menuAide = new JMenu("Aide");
 		menuBar.add(menuAide);
 		
-		mAbout = new JMenuItem("Au sujet de RirManager");
+		mAbout = new JMenuItem("Au sujet de RirDrugsManager");
 		mAbout.setActionCommand("ABOUT");
 		mAbout.addActionListener(this);
 		menuAide.add(mAbout);
@@ -318,7 +318,7 @@ public class mainProgram implements ICallBackMVC, ActionListener{
 			case "RECHERCHE_INFO": CtrlRechercheInfo ctrlRechercheInfo = new CtrlRechercheInfo();
 									break;
 									
-			case "ABOUT":		    diaAbout about  = new diaAbout(null,"Au sujet de RirManager",true);
+			case "ABOUT":		    diaAbout about  = new diaAbout(null,"Au sujet de RirDrugsManager",true);
 									about.setVisible(true);
 									break;
 									

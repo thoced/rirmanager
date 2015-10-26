@@ -8,6 +8,16 @@ public class Mtp
 	private String marque;
 	private String immatriculation;
 	private String couleur;
+	private String type;
+	
+	
+	
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
 	public String getMarque() {
 		return marque;
 	}
@@ -18,7 +28,7 @@ public class Mtp
 		return immatriculation;
 	}
 	public void setImmatriculation(String immatriculation) {
-		this.immatriculation = immatriculation;
+		this.immatriculation = immatriculation.trim().toUpperCase();
 	}
 	public String getCouleur() {
 		return couleur;
@@ -39,18 +49,19 @@ public class Mtp
 			marque = result.getString("marque");
 			immatriculation = result.getString("immatriculation");
 			couleur = result.getString("couleur");
+			type = result.getString("type");
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-	}
+	} 
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return marque + " " + immatriculation + " " + couleur; 
-	}
+		return marque + " " + immatriculation + " " + couleur+ " " + type; 
+	} 
 	
 	
 	
