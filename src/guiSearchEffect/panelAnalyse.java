@@ -12,6 +12,7 @@ import model.Personne;
 import model.PrenomManySearch;
 import model.Rir;
 import model.SqlLiteInterface;
+import model.SurnomManySearch;
 
 import java.awt.GridBagLayout;
 import java.sql.ResultSet;
@@ -41,6 +42,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.MatteBorder;
+import java.awt.Component;
 
 public class panelAnalyse extends JPanel 
 {
@@ -51,6 +53,8 @@ public class panelAnalyse extends JPanel
 	private JTable m_tableAnalysePersonne;
 	private JScrollPane scrollPane_2;
 	private JTable m_tableAnalysePrenom;
+	private JScrollPane scrollPane_3;
+	private JTable m_tableAnalyseSurnom;
 
 	public panelAnalyse() 
 	{
@@ -60,11 +64,11 @@ public class panelAnalyse extends JPanel
 		
 		
 		setBackground(Color.GRAY);
-		setLayout(new MigLayout("", "[250.00,center][180.00][180.00][-34.00,grow]", "[140.00]"));
+		setLayout(new MigLayout("", "[250.00,center][250][250][250][grow][grow]", "[140.00,grow]"));
 		
 		m_tableAnalyseContact = new JTable();
 		m_tableAnalyseContact.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		m_tableAnalyseContact.setBackground(Color.ORANGE);
+		m_tableAnalyseContact.setBackground(new Color(0,200,0));
 		modelContact mc = new modelContact();
 		m_tableAnalyseContact.setModel(mc);
 		JScrollPane scrollPane = new JScrollPane(m_tableAnalyseContact);
@@ -88,8 +92,15 @@ public class panelAnalyse extends JPanel
 		scrollPane_2 = new JScrollPane(m_tableAnalysePrenom);
 		scrollPane_2.setViewportBorder(new LineBorder(UIManager.getColor("InternalFrame.activeTitleGradient"), 2, true));
 		add(scrollPane_2, "cell 2 0,grow");
+		modelSurnom ms = new modelSurnom();
 		
+		m_tableAnalyseSurnom = new JTable();
+		m_tableAnalyseSurnom.setBackground(Color.ORANGE);
+		m_tableAnalyseSurnom.setModel(ms);
+		scrollPane_3 = new JScrollPane(m_tableAnalyseSurnom);
+		add(scrollPane_3, "cell 3 0,grow");
 		
+	
 		model = new panelAnalyseModel();
 		control = new panelAnalyseControl();
 		
@@ -138,6 +149,15 @@ public class panelAnalyse extends JPanel
 
 
 
+	public JTable getM_tableAnalyseSurnom() {
+		return m_tableAnalyseSurnom;
+	}
+
+
+
+
+
+
 	public class panelAnalyseControl implements MouseListener
 	{
 
@@ -149,6 +169,7 @@ public class panelAnalyse extends JPanel
 			panelAnalyse.this.getM_tableAnalyseContact().addMouseListener(this);
 			panelAnalyse.this.getM_tableAnalysePersonne().addMouseListener(this);
 			panelAnalyse.this.getM_tableAnalysePrenom().addMouseListener(this);
+			panelAnalyse.this.getM_tableAnalyseSurnom().addMouseListener(this);
 			
 		}
 
@@ -186,6 +207,14 @@ public class panelAnalyse extends JPanel
 				CtrlListRir ct = new CtrlListRir();
 				ct.RechercheFromPrenom(personne.getPrenom());
 			}
+			// AnalyseSurnom
+			if(arg0.getSource() == panelAnalyse.this.getM_tableAnalyseSurnom())
+			{
+				int row = panelAnalyse.this.getM_tableAnalyseSurnom().getSelectedRow();
+				SurnomManySearch personne = (SurnomManySearch) ((modelSurnom)panelAnalyse.this.getM_tableAnalyseSurnom().getModel()).getListSurnom().get(row);
+				CtrlListRir ct = new CtrlListRir();
+				ct.RechercheFromSurnom(personne.getSurnom());
+			}			
 		}
 
 		@Override
@@ -281,7 +310,26 @@ public class panelAnalyse extends JPanel
 								mp.getListPersonne().add(p);
 							}
 							
-							panelAnalyse.this.getM_tableAnalysePersonne().updateUI();
+							panelAnalyse.this.getM_tableAnalysePrenom().updateUI();
+							
+						} catch (ClassNotFoundException | SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}		
+			// surnom
+						try 
+						{
+							
+							modelSurnom ms = (modelSurnom)panelAnalyse.this.getM_tableAnalyseSurnom().getModel();
+							ms.getListSurnom().clear();
+							ResultSet result = SqlLiteInterface.SelectManySurnom();
+							while(result.next())
+							{
+								SurnomManySearch p = new SurnomManySearch(result);
+								ms.getListSurnom().add(p);
+							}
+							
+							panelAnalyse.this.getM_tableAnalyseSurnom().updateUI();
 							
 						} catch (ClassNotFoundException | SQLException e) {
 							// TODO Auto-generated catch block

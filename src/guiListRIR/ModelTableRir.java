@@ -12,6 +12,7 @@ import java.util.Vector;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 
+import model.NoDeleteException;
 import model.Quartier;
 import model.Rir;
 import model.SqlLiteInterface;
@@ -24,26 +25,36 @@ public class ModelTableRir extends DefaultTableModel
 	public ModelTableRir()
 	{
 		
-		// chargement de la liste
-			listRir.clear();
-			ResultSet result;
-			try
-			{
-				result = SqlLiteInterface.SelectAllRir();
-				update(result);
-				
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
+		this.updateModel();
 
 		
 	}
 	
+	
+	
+	public List<Rir> getListRir() {
+		return listRir;
+	}
+
+	public void updateModel()
+	{
+		listRir.clear();
+		ResultSet result;
+		try
+		{
+			result = SqlLiteInterface.SelectAllRir();
+			update(result);
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
 	private void update(ResultSet result)
 	{
 		try {
@@ -58,6 +69,13 @@ public class ModelTableRir extends DefaultTableModel
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void DeleteRir(int idRir) throws NoDeleteException
+	{
+		Rir rir = listRir.get(idRir);
+		SqlLiteInterface.DeleteRir(rir.getId());
+	
 	}
 	
 	public void SelectWidthDate(Date b,Date h)
@@ -168,6 +186,21 @@ public class ModelTableRir extends DefaultTableModel
 		ResultSet result;
 		try {
 			result = SqlLiteInterface.SelectRirFromPrenom(prenom);
+			update(result);
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void SelectFromSurnom(String surnom)
+	{
+		listRir.clear();
+		
+		ResultSet result;
+		try {
+			result = SqlLiteInterface.SelectRirFromSurnom(surnom);
 			update(result);
 		} catch (ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block

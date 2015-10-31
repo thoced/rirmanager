@@ -824,6 +824,20 @@ public class SqlLiteInterface
 		
 	}
 	
+	public static ResultSet SelectRirFromSurnom(String surnom) throws ClassNotFoundException, SQLException
+	{
+		String sql = "select t_rir.id,daterir,numero,nature,source from t_rir INNER JOIN t_personne ON t_rir.id = t_personne.ref_rir where surnom = ? ";
+		
+		PreparedStatement ps = getConnection().prepareStatement(sql);
+		ps.setString(1, surnom);
+				
+		
+		return ps.executeQuery();
+		
+		
+		
+	}
+	
 	public static ResultSet SelectRirFromMtp(String marque,String immatriculation,String couleur) throws ClassNotFoundException, SQLException
 	{
 		marque = "%" + marque + "%";
@@ -863,7 +877,7 @@ public class SqlLiteInterface
 	
 	public static ResultSet SelectManyContact() throws ClassNotFoundException, SQLException
 	{
-		String sql = "select contact,nb from (select contact,count(contact) nb from t_contact group by contact ) td where td.nb > 1";
+		String sql = "select contact,nb from (select contact,count(contact) nb from t_contact group by contact ) td where td.nb > 1 AND td.contact <> ''";
 		
 		Statement st =  getConnection().createStatement();
 		return st.executeQuery(sql);
@@ -872,7 +886,7 @@ public class SqlLiteInterface
 	
 	public static ResultSet SelectManyPersonne() throws ClassNotFoundException, SQLException
 	{
-		String sql = "select nom,nb from (select nom,count(nom) nb from t_personne group by nom ) td where td.nb > 1";
+		String sql = "select nom,nb from (select nom,count(nom) nb from t_personne group by nom ) td where td.nb > 1 AND td.nom <> ''";
 		
 		//String sql = "select nom,prenom,surnom,datenaissance,nb,nbprenom from (select nom,prenom,surnom,datenaissance,count(nom) nb,count(prenom) nbprenom from t_personne group by nom ) td where td.nb > 1 OR td.nbprenom > 1";
 		
@@ -884,7 +898,7 @@ public class SqlLiteInterface
 	
 	public static ResultSet SelectManyPrenom() throws ClassNotFoundException, SQLException
 	{
-		String sql = "select prenom,nb from (select prenom,count(prenom) nb from t_personne group by prenom ) td where td.nb > 1";
+		String sql = "select prenom,nb from (select prenom,count(prenom) nb from t_personne group by prenom ) td where td.nb > 1 AND td.prenom <> ''";
 		
 		//String sql = "select nom,prenom,surnom,datenaissance,nb,nbprenom from (select nom,prenom,surnom,datenaissance,count(nom) nb,count(prenom) nbprenom from t_personne group by nom ) td where td.nb > 1 OR td.nbprenom > 1";
 		
@@ -892,4 +906,87 @@ public class SqlLiteInterface
 		return st.executeQuery(sql);
 		
 	}
+	
+	public static ResultSet SelectManySurnom() throws ClassNotFoundException, SQLException
+	{
+		String sql = "select surnom,nb from (select surnom,count(surnom) nb from t_personne group by surnom ) td where td.nb > 1 AND td.surnom <> ''";
+		
+		//String sql = "select nom,prenom,surnom,datenaissance,nb,nbprenom from (select nom,prenom,surnom,datenaissance,count(nom) nb,count(prenom) nbprenom from t_personne group by nom ) td where td.nb > 1 OR td.nbprenom > 1";
+		
+		Statement st =  getConnection().createStatement();
+		return st.executeQuery(sql);
+		
+	}
+	
+	public static void DeleteRir(int idRir) throws NoDeleteException
+	{
+		// suppression dans les tables link
+		String sqlpersonne = "delete from t_personne where ref_rir = ?";
+		String sqlmtp = "delete from t_mtp where ref_rir = ?";
+		String sqlquartier = "delete from t_link_quartier where ref_rir = ?";
+		String sqldrogue = "delete from t_link_drogue where ref_rir = ?";
+		String sqlmethode = "delete from t_link_methode where ref_rir = ?";
+		String sqlcontact = "delete from t_contact where ref_rir = ?";
+		String sqlrir = "delete from t_rir where id = ?";
+		
+		
+		PreparedStatement ps;
+		try
+		{
+			// on force le autocommit à falsed pour avoir une opération atomique
+			getConnection().setAutoCommit(false);
+			
+			ps = getConnection().prepareStatement(sqlpersonne);
+			ps.setInt(1, idRir);
+			ps.executeUpdate();
+			
+			ps = getConnection().prepareStatement(sqlmtp);
+			ps.setInt(1, idRir);
+			ps.executeUpdate();
+			
+			ps = getConnection().prepareStatement(sqlquartier);
+			ps.setInt(1, idRir);
+			ps.executeUpdate();
+			
+			ps = getConnection().prepareStatement(sqldrogue);
+			ps.setInt(1, idRir);
+			ps.executeUpdate();
+			
+			ps = getConnection().prepareStatement(sqlmethode);
+			ps.setInt(1, idRir);
+			ps.executeUpdate();
+			
+			ps = getConnection().prepareStatement(sqlcontact);
+			ps.setInt(1, idRir);
+			ps.executeUpdate();
+			
+			ps = getConnection().prepareStatement(sqlrir);
+			ps.setInt(1, idRir);
+			ps.executeUpdate();
+			
+			// commit de l'ensemble de la séquence
+			getConnection().commit();
+		
+			
+			
+		} catch (ClassNotFoundException | SQLException e) 
+		{
+			throw new NoDeleteException("Probleme lors de la suppression du Rir (delete rir), contactez l'administrateur");
+		}
+	
+		// on force le autocommit à true 
+		try 
+		{
+			getConnection().setAutoCommit(true);
+			
+		} catch (ClassNotFoundException | SQLException e) 
+		{
+			throw new NoDeleteException("Probleme lors de la suppression du Rir (error auto commit on), contactez l'administrateur");
+		}
+		
+		
+		
+	}
+	
+	
 }

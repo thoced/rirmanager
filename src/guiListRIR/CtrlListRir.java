@@ -1,5 +1,6 @@
 package guiListRIR;
 
+import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,11 +19,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 
 import model.Drogue;
 import model.Methode;
 import model.Mtp;
+import model.NoDeleteException;
 import model.NumeroContact;
 import model.Personne;
 import model.Quartier;
@@ -51,7 +55,7 @@ public class CtrlListRir implements ActionListener,MouseListener
 		dia.getbViewData().addActionListener(this);
 		dia.getbViewData().setActionCommand("VIEWPDF");
 		
-		
+		dia.getTableListRir().addMouseListener(this);
 		// affichage de la vue
 		//dia.setVisible(true);
 	}
@@ -91,6 +95,13 @@ public class CtrlListRir implements ActionListener,MouseListener
 		dia.setVisible(true);
 	}
 	
+	public void RechercheFromSurnom(String surnom)
+	{
+		modelRir.SelectFromSurnom(surnom);
+		dia.getTableListRir().updateUI();
+		dia.setVisible(true);
+	}
+	
 	public void RechercheFromMtp(String marque,String immatriculation,String couleur)
 	{
 		modelRir.SelectFromMtp(marque, immatriculation, couleur);
@@ -124,8 +135,14 @@ public class CtrlListRir implements ActionListener,MouseListener
 	{
 		if(arg0.getButton() == MouseEvent.BUTTON3)
 		{
-			// si bouton droit
-			
+			// si bouton droit, pour suppression
+			JPopupMenu menuPop = new JPopupMenu();
+			JMenuItem menuItem = new JMenuItem("Supprimer le Rir n°: " + String.valueOf((dia.getTableListRir().getSelectedRow() + 1)));
+			menuItem.setActionCommand("POPDELETE");
+			menuItem.setBackground(Color.ORANGE);
+			menuPop.add(menuItem);
+			menuItem.addActionListener(this);
+			menuPop.show(dia.getTableListRir(), arg0.getX(), arg0.getY());
 		}
 
 	}
@@ -260,14 +277,42 @@ public class CtrlListRir implements ActionListener,MouseListener
 					fos.close();
 					Desktop.getDesktop().open(f);
 					break;
-	
-					
+
 			} 
 				catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}break;
 			
+
+			case "POPDELETE":
+			{
+				int ret = JOptionPane.showConfirmDialog(null, "Etes-vous sûr de vouloir supprimer ce RIR ?");
+				if(ret == JOptionPane.OK_OPTION)
+				{
+					// suppression du rir sélectionné
+					ModelTableRir model = (ModelTableRir) dia.getTableListRir().getModel();
+					if(model != null)
+					{
+						try
+						{
+							model.DeleteRir(dia.getTableListRir().getSelectedRow());
+							// mise à jour de la table
+							model.updateModel();
+							// update ui
+							dia.getTableListRir().updateUI();
+							
+							
+							
+						} catch (NoDeleteException e) 
+						{
+							JOptionPane.showMessageDialog(null, e.getMessage());
+						}
+					}
+				}
+				
+				break;
+			}
 			
 		}
 	}
