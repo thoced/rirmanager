@@ -59,6 +59,9 @@ public class diaListRIR extends JDialog
 		tableListRir = new JTable();
 		tableListRir.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		tableListRir.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		
+		
 		JScrollPane scrollPane = new JScrollPane(tableListRir);
 		scrollPane.setBounds(35, 11, 400, 740);
 		getContentPane().add(scrollPane);

@@ -17,6 +17,7 @@ import java.text.ParseException;
 
 import gui.diaAdd;
 import gui.diaAddRirView;
+import gui.diaRechercheMultiple;
 import gui.panelAdd;
 import gui.panelList;
 
@@ -77,6 +78,7 @@ import net.miginfocom.swing.MigLayout;
 import java.awt.event.WindowFocusListener;
 import java.awt.Font;
 import java.awt.Frame;
+import javax.swing.UIManager;
 
 public class mainProgram implements ICallBackMVC, ActionListener{
 
@@ -100,6 +102,7 @@ public class mainProgram implements ICallBackMVC, ActionListener{
 	private JTable m_tableAnalyseContact;
 	private JLabel m_lDev;
 	private JPanel panelDev;
+	private JMenuItem mMultipleRecherche;
 	/**
 	 * Launch the application.
 	 */
@@ -216,6 +219,12 @@ public class mainProgram implements ICallBackMVC, ActionListener{
 		mRechercheInfo.setActionCommand("RECHERCHE_INFO");
 		menuRecherche.add(mRechercheInfo);
 		
+		mMultipleRecherche = new JMenuItem("Recherche crois\u00E9e");
+		mMultipleRecherche.addActionListener(this);
+		mMultipleRecherche.setActionCommand("RECHERCHE_CROISEE");
+		mMultipleRecherche.setBackground(UIManager.getColor("activeCaption"));
+		menuRecherche.add(mMultipleRecherche);
+		
 		menuAide = new JMenu("Aide");
 		menuBar.add(menuAide);
 		
@@ -314,6 +323,10 @@ public class mainProgram implements ICallBackMVC, ActionListener{
 									
 			case "RECHERCHE_CONTACT": CtrlRechercheContact ctrlRechercheContact = new CtrlRechercheContact();
 									break;
+									
+			case "RECHERCHE_CROISEE": diaRechercheMultiple diaCroisee = new diaRechercheMultiple(this.frame,"Recherche croisée",true);
+									  diaCroisee.setVisible(true);
+									 break;
 									
 			case "RECHERCHE_INFO": CtrlRechercheInfo ctrlRechercheInfo = new CtrlRechercheInfo();
 									break;

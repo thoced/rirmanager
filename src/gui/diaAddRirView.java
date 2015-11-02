@@ -7,6 +7,8 @@ import java.awt.BorderLayout;
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.MaskFormatter;
 
 import model.ContactSearch;
@@ -801,8 +803,12 @@ public class diaAddRirView extends JDialog
 			// Load pdf
 			if(arg0.getSource() == diaAddRirView.this.getM_bLoadPdf())
 			{
+				// filtre des fichiers pouvant être choisi
+				FileFilter fileFilter = new FileNameExtensionFilter("Document Pdf du RIR","pdf");
 				JFileChooser fc = new JFileChooser();
-				int ret = fc.showOpenDialog(diaAddRirView.this);
+				fc.setAcceptAllFileFilterUsed(false);
+				fc.addChoosableFileFilter(fileFilter);
+				int ret = fc.showOpenDialog(null);
 				if(ret == JFileChooser.APPROVE_OPTION)
 				{
 					m_pdfFile = fc.getSelectedFile();

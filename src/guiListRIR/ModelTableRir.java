@@ -55,6 +55,24 @@ public class ModelTableRir extends DefaultTableModel
 		
 	}
 
+	public void setResult(ResultSet result)
+	{
+		
+		listRir.clear();
+		try {
+			while(result.next())
+			{
+				Rir rir = new Rir(result);
+				listRir.add(rir);
+				
+				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	private void update(ResultSet result)
 	{
 		try {

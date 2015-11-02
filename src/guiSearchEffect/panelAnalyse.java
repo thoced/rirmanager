@@ -171,6 +171,18 @@ public class panelAnalyse extends JPanel
 			panelAnalyse.this.getM_tableAnalysePrenom().addMouseListener(this);
 			panelAnalyse.this.getM_tableAnalyseSurnom().addMouseListener(this);
 			
+			// empèche la surbrillance lors d'une sélection
+			/*panelAnalyse.this.getM_tableAnalyseContact().setCellSelectionEnabled(false);
+			panelAnalyse.this.getM_tableAnalysePersonne().setCellSelectionEnabled(false);
+			panelAnalyse.this.getM_tableAnalysePrenom().setCellSelectionEnabled(false);
+			panelAnalyse.this.getM_tableAnalyseSurnom().setCellSelectionEnabled(false);*/
+			
+			panelAnalyse.this.getM_tableAnalyseContact().setRowSelectionAllowed(false);
+			panelAnalyse.this.getM_tableAnalysePersonne().setRowSelectionAllowed(false);
+			panelAnalyse.this.getM_tableAnalysePrenom().setRowSelectionAllowed(false);
+			panelAnalyse.this.getM_tableAnalyseSurnom().setRowSelectionAllowed(false);
+			
+			
 		}
 
 		@Override
@@ -256,6 +268,8 @@ public class panelAnalyse extends JPanel
 		
 		public void updateData()
 		{
+			
+			
 			// contact
 						try 
 						{

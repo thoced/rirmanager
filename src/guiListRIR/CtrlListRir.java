@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Date;
+import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -58,6 +59,13 @@ public class CtrlListRir implements ActionListener,MouseListener
 		dia.getTableListRir().addMouseListener(this);
 		// affichage de la vue
 		//dia.setVisible(true);
+	}
+	
+	public void RechercheFromResult(ResultSet result)
+	{
+		modelRir.setResult(result);
+		dia.getTableListRir().updateUI();
+		dia.setVisible(true);
 	}
 
 	public void RechercheFromDrogue(String drogue)
