@@ -79,9 +79,9 @@ public class diaRechercheMultiple extends JDialog
 		getContentPane().add(m_pRecherche, BorderLayout.CENTER);
 		GridBagLayout gbl_m_pRecherche = new GridBagLayout();
 		gbl_m_pRecherche.columnWidths = new int[]{200, 345, 0, 0};
-		gbl_m_pRecherche.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_m_pRecherche.rowHeights = new int[]{80, 80, 80, 0, 0, 0, 0, 0};
 		gbl_m_pRecherche.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_m_pRecherche.rowWeights = new double[]{1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_m_pRecherche.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
 		m_pRecherche.setLayout(gbl_m_pRecherche);
 		
 		panel = new JPanel();
@@ -102,7 +102,7 @@ public class diaRechercheMultiple extends JDialog
 		dtrpnCrerVotre.setBackground(new Color(240,240,240));
 		dtrpnCrerVotre.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		dtrpnCrerVotre.setEditable(false);
-		dtrpnCrerVotre.setText("* Cr\u00E9er votre requ\u00EAte personnalis\u00E9e\r\n* Maintenez la touche \"Ctrl\" pour s\u00E9lectionner plusieurs \r\n   \u00E9l\u00E9ments\r\n");
+		dtrpnCrerVotre.setText("* Cr\u00E9er votre requ\u00EAte personnalis\u00E9e.\r\n* Maintenez la touche \"Ctrl\" pour s\u00E9lectionner plusieurs \r\n   \u00E9l\u00E9ments.\r\n* Un ET logique est utilis\u00E9 pour cr\u00E9er la requ\u00EAte. \r\n");
 		GridBagConstraints gbc_dtrpnCrerVotre = new GridBagConstraints();
 		gbc_dtrpnCrerVotre.insets = new Insets(0, 0, 5, 5);
 		gbc_dtrpnCrerVotre.fill = GridBagConstraints.BOTH;
@@ -139,6 +139,7 @@ public class diaRechercheMultiple extends JDialog
 		panel_2.add(scrollPane_3, BorderLayout.CENTER);
 		
 		m_bClear = new JButton("Effacer la requ\u00EAte");
+		m_bClear.setBackground(Color.ORANGE);
 		GridBagConstraints gbc_m_bClear = new GridBagConstraints();
 		gbc_m_bClear.insets = new Insets(0, 0, 5, 5);
 		gbc_m_bClear.gridx = 0;
@@ -298,7 +299,7 @@ public class diaRechercheMultiple extends JDialog
 		
 		public ResultSet executeRequete()
 		{
-			System.out.println(requete);
+			
 			
 			try 
 			{
@@ -307,7 +308,7 @@ public class diaRechercheMultiple extends JDialog
 				return result;
 			} catch (ClassNotFoundException | SQLException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Erreur dans l'éxécution de la requête, avez-vous séléctionné au minimum un élément ?");
 			}
 			return null;
 		}

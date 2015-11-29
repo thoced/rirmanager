@@ -183,7 +183,7 @@ public class SqlLiteInterface
 			st.executeUpdate("insert into t_quartier (quartier) values('Jemeppe')");
 			st.executeUpdate("insert into t_quartier (quartier) values('Neupré')");
 			st.executeUpdate("insert into t_quartier (quartier) values('Indéterminé')");
-			st.executeUpdate("insert into t_quartier (quartier) values('Liège')");
+			st.executeUpdate("insert into t_quartier (quartier) values('(hors zone)')");
 			
 			st.executeUpdate("insert into t_drogue (drogue) values('Cannabis')");
 			st.executeUpdate("insert into t_drogue (drogue) values('Cocaïne')");
@@ -201,7 +201,8 @@ public class SqlLiteInterface
 			st.executeUpdate("insert into t_couleur (couleur) values('Noir')");
 			st.executeUpdate("insert into t_couleur (couleur) values('Gris')");
 			st.executeUpdate("insert into t_couleur (couleur) values('Rouge')");
-			st.executeUpdate("insert into t_couleur (couleur) values('Vin')");
+			st.executeUpdate("insert into t_couleur (couleur) values('Bordeaux')");
+			st.executeUpdate("insert into t_couleur (couleur) values('Indéterminé')");
 			st.executeUpdate("insert into t_couleur (couleur) values('Jaune')");
 			st.executeUpdate("insert into t_couleur (couleur) values('Vert')");
 			st.executeUpdate("insert into t_couleur (couleur) values('Bleu')");
@@ -329,6 +330,7 @@ public class SqlLiteInterface
 			st.executeUpdate("insert into t_quartier (quartier) values('Jemeppe')");
 			st.executeUpdate("insert into t_quartier (quartier) values('Neupré')");
 			st.executeUpdate("insert into t_quartier (quartier) values('Indéterminé')");
+			st.executeUpdate("insert into t_quartier (quartier) values('hors zone)");
 						
 			st.executeUpdate("insert into t_drogue (drogue) values('Cannabis')");
 			st.executeUpdate("insert into t_drogue (drogue) values('Cocaïne')");
@@ -347,10 +349,11 @@ public class SqlLiteInterface
 			st.executeUpdate("insert into t_couleur (couleur) values('Noir')");
 			st.executeUpdate("insert into t_couleur (couleur) values('Gris')");
 			st.executeUpdate("insert into t_couleur (couleur) values('Rouge')");
-			st.executeUpdate("insert into t_couleur (couleur) values('Vin')");
+			st.executeUpdate("insert into t_couleur (couleur) values('Bordeaux')");
 			st.executeUpdate("insert into t_couleur (couleur) values('Jaune')");
 			st.executeUpdate("insert into t_couleur (couleur) values('Vert')");
 			st.executeUpdate("insert into t_couleur (couleur) values('Bleu')");
+			st.executeUpdate("insert into t_couleur (couleur) values('Indéterminé')");
 			
 			st.executeUpdate("insert into t_type_mtp (type) values('Vehicule (4 roues)')");
 			st.executeUpdate("insert into t_type_mtp (type) values('Vehicule (2 roues)')");
@@ -366,6 +369,7 @@ public class SqlLiteInterface
 			st.executeUpdate("insert into t_source (source) values('ZP 5281 BASSE MEUSE')");
 			st.executeUpdate("insert into t_source (source) values('ZP 5282 FLEMALLE')");
 			st.executeUpdate("insert into t_source (source) values('ZP 5283 SECOVA')");
+			st.executeUpdate("insert into t_source (source) values('ZP 5284 ANS-SAINT-NICOLAS')");
 			st.executeUpdate("insert into t_source (source) values('ZP 5285 AWANS / GRACE-HOLLOGNE')");
 			st.executeUpdate("insert into t_source (source) values('ZP 5286 HESBAYE')");
 			st.executeUpdate("insert into t_source (source) values('ZP 5287 FAGNES')");
@@ -383,6 +387,7 @@ public class SqlLiteInterface
 			st.executeUpdate("insert into t_source (source) values('PJF (Autres)')");
 			st.executeUpdate("insert into t_source (source) values('PJF (SIC)')");
 			st.executeUpdate("insert into t_source (source) values('DGJ')");
+			st.executeUpdate("insert into t_source (source) values('CIA-SICAD')");
 			
 		
 			
@@ -782,6 +787,14 @@ public class SqlLiteInterface
 	
 	public static ResultSet SelectRirFromPersonne(String nom,String prenom,String surnom) throws ClassNotFoundException, SQLException
 	{
+		if(nom.length() == 0)
+			nom = null;
+		if(prenom.length() == 0)
+			prenom = null;
+		if(surnom.length() == 0)
+			surnom = null;
+		
+		
 		String sql = "select t_rir.id,daterir,numero,nature,source from t_rir INNER JOIN t_personne ON t_rir.id = t_personne.ref_rir where nom = ? OR prenom = ? OR surnom = ? AND nom <> '' AND prenom <> '' AND surnom <> ''";
 		
 		PreparedStatement ps = getConnection().prepareStatement(sql);
@@ -789,6 +802,8 @@ public class SqlLiteInterface
 		ps.setString(2, prenom);
 		ps.setString(3, surnom);
 		
+		
+
 		
 		return ps.executeQuery();
 		
@@ -798,7 +813,7 @@ public class SqlLiteInterface
 	
 	public static ResultSet SelectRirFromNom(String nom) throws ClassNotFoundException, SQLException
 	{
-		String sql = "select t_rir.id,daterir,numero,nature,source from t_rir INNER JOIN t_personne ON t_rir.id = t_personne.ref_rir where nom = ? ";
+		String sql = "select t_rir.id,daterir,numero,nature,source from t_rir  INNER JOIN t_personne ON t_rir.id = t_personne.ref_rir where nom = ? group by id";
 		
 		PreparedStatement ps = getConnection().prepareStatement(sql);
 		ps.setString(1, nom);
@@ -812,7 +827,7 @@ public class SqlLiteInterface
 	
 	public static ResultSet SelectRirFromPrenom(String prenom) throws ClassNotFoundException, SQLException
 	{
-		String sql = "select t_rir.id,daterir,numero,nature,source from t_rir INNER JOIN t_personne ON t_rir.id = t_personne.ref_rir where prenom = ? ";
+		String sql = "select t_rir.id,daterir,numero,nature,source from t_rir INNER JOIN t_personne ON t_rir.id = t_personne.ref_rir where prenom = ? group by id";
 		
 		PreparedStatement ps = getConnection().prepareStatement(sql);
 		ps.setString(1, prenom);
@@ -826,7 +841,7 @@ public class SqlLiteInterface
 	
 	public static ResultSet SelectRirFromSurnom(String surnom) throws ClassNotFoundException, SQLException
 	{
-		String sql = "select t_rir.id,daterir,numero,nature,source from t_rir INNER JOIN t_personne ON t_rir.id = t_personne.ref_rir where surnom = ? ";
+		String sql = "select t_rir.id,daterir,numero,nature,source from t_rir INNER JOIN t_personne ON t_rir.id = t_personne.ref_rir where surnom = ? group by id";
 		
 		PreparedStatement ps = getConnection().prepareStatement(sql);
 		ps.setString(1, surnom);
@@ -840,12 +855,24 @@ public class SqlLiteInterface
 	
 	public static ResultSet SelectRirFromMtp(String marque,String immatriculation,String couleur) throws ClassNotFoundException, SQLException
 	{
-		marque = "%" + marque + "%";
+		if(marque.length() == 0)
+			marque = null;
+		if(immatriculation.length() == 0)
+			immatriculation = null;
+		if(couleur.length() == 0)
+			couleur = null;
+		
+		
+		
+		if(marque != null)
+			marque = "%" + marque + "%";
+		if(immatriculation != null)
+			immatriculation = "%" + immatriculation + "%";
 		
 		String sql;
-		if(immatriculation.length() > 0)
+		if(immatriculation != null && immatriculation.length() > 0)
 		{
-			 sql = "select t_rir.id,daterir,numero,nature,source from t_rir INNER JOIN t_mtp ON t_rir.id = t_mtp.ref_rir where marque like ? OR immatriculation = ? OR couleur = ? AND marque <> '' AND immatriculation <> '' AND couleur <> ''";
+			 sql = "select t_rir.id,daterir,numero,nature,source from t_rir INNER JOIN t_mtp ON t_rir.id = t_mtp.ref_rir where marque like ? OR immatriculation like ? OR couleur = ? AND marque <> '' AND immatriculation <> '' AND couleur <> ''";
 			 	PreparedStatement ps = getConnection().prepareStatement(sql);
 				ps.setString(1, marque);
 				ps.setString(2, immatriculation);
@@ -886,7 +913,7 @@ public class SqlLiteInterface
 	
 	public static ResultSet SelectManyPersonne() throws ClassNotFoundException, SQLException
 	{
-		String sql = "select nom,nb from (select nom,count(nom) nb from t_personne group by nom ) td where td.nb > 1 AND td.nom <> ''";
+		String sql = "select nom,nb from (select nom,count(nom) nb from t_personne group by nom,prenom ) td where td.nb > 1 AND td.nom <> ''";
 		
 		//String sql = "select nom,prenom,surnom,datenaissance,nb,nbprenom from (select nom,prenom,surnom,datenaissance,count(nom) nb,count(prenom) nbprenom from t_personne group by nom ) td where td.nb > 1 OR td.nbprenom > 1";
 		

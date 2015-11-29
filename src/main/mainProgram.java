@@ -79,6 +79,7 @@ import java.awt.event.WindowFocusListener;
 import java.awt.Font;
 import java.awt.Frame;
 import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 
 public class mainProgram implements ICallBackMVC, ActionListener{
 
@@ -132,7 +133,7 @@ public class mainProgram implements ICallBackMVC, ActionListener{
 	private void initialize() {
 		frame = new JFrame();
 		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
-		
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		
 		// icon
 		frame.setIconImage(new ImageIcon(this.getClass().getResource("/Textures/logoico.png")).getImage());
@@ -150,8 +151,12 @@ public class mainProgram implements ICallBackMVC, ActionListener{
 			@Override
 			public void windowClosing(WindowEvent e) 
 			{
-				try {
+				try 
+				{
+					JOptionPane.showMessageDialog(null, "Fermeture");
+					
 					SqlLiteInterface.close();
+					
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -335,7 +340,7 @@ public class mainProgram implements ICallBackMVC, ActionListener{
 									about.setVisible(true);
 									break;
 									
-			case "QUITTER": frame.setVisible(false);frame.dispose();System.exit(0);break;
+			case "QUITTER": this.frame.setVisible(false);this.frame.dispose();break;
 		
 			
 								

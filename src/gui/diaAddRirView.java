@@ -994,21 +994,21 @@ public class diaAddRirView extends JDialog
 						Calendar c = Calendar.getInstance();
 						c.setLenient(false);
 						int year = Integer.valueOf(splitDate[2]);
-						int month = Integer.valueOf(splitDate[1]) + 1;
+						int month = Integer.valueOf(splitDate[1]) - 1;
 						int day = Integer.valueOf(splitDate[0]);
 						c.set(year, month, day);
 						c.getTime();
 					}
 					catch(IllegalArgumentException ee)
 					{
-						JOptionPane.showMessageDialog(null, "Date du rir incorrecte");
+						JOptionPane.showMessageDialog(null, "Date du rir incorrecte (1)");
 						diaAddRirView.this.getM_tDateRir().setText("");
 					}
 					
 				}
 				else
 				{
-					JOptionPane.showMessageDialog(null, "Date du rir incorrecte");
+					JOptionPane.showMessageDialog(null, "Date du rir incorrecte (2)");
 					diaAddRirView.this.getM_tDateRir().setText("");
 				}
 			}

@@ -4,6 +4,7 @@ import java.awt.Frame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JPanel;
 
 public class diaRechercheInfo extends diaBaseRecherche {
 	private JLabel lblElmentRechercher;
@@ -19,7 +20,7 @@ public class diaRechercheInfo extends diaBaseRecherche {
 		
 		tInfo = new JTextArea();
 		scrollPane = new JScrollPane(tInfo);
-		scrollPane.setBounds(176, 25, 367, 68);
+		scrollPane.setBounds(176, 25, 367, 148);
 		getContentPane().add(scrollPane);
 		
 	
@@ -28,6 +29,4 @@ public class diaRechercheInfo extends diaBaseRecherche {
 	public JTextArea gettInfo() {
 		return tInfo;
 	}
-	
-	
 }
